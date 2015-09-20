@@ -1,0 +1,16 @@
+*.class
+*.log
+*.pyc
+*.bin
+*.tar
+*.zip
+*~
+*.iml
+
+.gradle/
+.idea/
+build/
+target/
+nbproject/
+index/
+/.nb-gradle/
