@@ -1,10 +1,10 @@
 apply plugin: 'java'
 apply plugin: 'spring-boot'
 
-version = '1.0'
+version = "0.1"
 group = 'medved'
 
-project.description = "FIAS"
+description = "FIAS"
 
 repositories{
     mavenLocal()

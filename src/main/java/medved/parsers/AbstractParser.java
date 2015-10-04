@@ -15,7 +15,6 @@ import javax.xml.stream.XMLInputFactory;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import org.springframework.data.repository.CrudRepository;
 
 /**
  *
@@ -25,9 +24,10 @@ public abstract class AbstractParser<T>{
     protected String sourceFile;
 
     public AbstractParser(String sourceFile) {
+        this.model = (Class<T>) ClassLoader.getSystemClassLoader().getClass();
         this.sourceFile = sourceFile;
     }
-    private Class<T> model;
+    private final Class<T> model;
     
     public void parse() throws FileNotFoundException, XMLStreamException, JAXBException {
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
