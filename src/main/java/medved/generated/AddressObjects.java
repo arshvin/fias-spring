@@ -297,7 +297,7 @@ public class AddressObjects {
     private java.util.UUID id;
     @XmlElement(name = "Object", required = true)
     protected List<AddressObjects.Object> object;
-
+    
     /**
      * Gets the value of the object property.
      * 
@@ -665,6 +665,13 @@ public class AddressObjects {
         @XmlAttribute(name = "LIVESTATUS", required = true)
         protected byte livestatus;
 
+        @Override
+        public String toString() {
+            return "Object{" + "aoguid=" + aoguid + ", formalname=" + formalname + ", aoid=" + aoid + '}';
+        }
+
+        
+        
         /**
          * Gets the value of the aoguid property.
          * 

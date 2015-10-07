@@ -22,10 +22,14 @@ dependencies{
     compile "org.springframework.boot:spring-boot-starter-tomcat:1.2.3.RELEASE"
     compile "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final"
     compile "org.hibernate:hibernate-search:4.5.3.Final"
-
+    //compile "javax.xml.bind:jaxb-api:2.2.12"
+    //compile "com.sun.xml.bind:jaxb-impl:2.2.10"
+    //compile "com.sun.xml.bind:jaxb-core:2.2.10"
+    compile "org.slf4j:slf4j-api:1.7.12"
+    
     testCompile "org.springframework.boot:spring-boot-starter-test:1.2.3.RELEASE"
     testCompile "junit:junit:4.11"
-    testRuntime "com.h2database:h2:1.4.185"
+    testCompile "com.h2database:h2:1.4.185"
 }
 
 buildscript {

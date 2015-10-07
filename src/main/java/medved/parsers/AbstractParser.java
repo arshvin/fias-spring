@@ -15,6 +15,7 @@ import javax.xml.stream.XMLInputFactory;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import medved.generated.AddressObjects;
 
 /**
  *
@@ -22,29 +23,30 @@ import javax.xml.stream.XMLStreamReader;
  */
 public abstract class AbstractParser<T>{
     protected String sourceFile;
-
+    private final Class clazz;
+    
     public AbstractParser(String sourceFile) {
-        this.model = (Class<T>) ClassLoader.getSystemClassLoader().getClass();
+        //this.clazz = (Class<T>) ClassLoader.getSystemClassLoader().getClass();
+        this.clazz = AddressObjects.Object.class;
         this.sourceFile = sourceFile;
     }
-    private final Class<T> model;
-    
+ 
     public void parse() throws FileNotFoundException, XMLStreamException, JAXBException {
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         XMLStreamReader xmlReader = xmlInputFactory.createXMLStreamReader(new FileReader(sourceFile));
-        JAXBContext ucontext = JAXBContext.newInstance(model);
+        JAXBContext ucontext = JAXBContext.newInstance(clazz);
         Unmarshaller unmarshaller = ucontext.createUnmarshaller();
         
         xmlReader.nextTag(); //<AddrObjects> or <Houses>
         xmlReader.nextTag(); //<AddrObj> or <House>
         
         while (xmlReader.getEventType() == START_ELEMENT){
-            JAXBElement<T> element = unmarshaller.unmarshal(xmlReader, model);
+            JAXBElement<AddressObjects.Object> element = unmarshaller.unmarshal(xmlReader, clazz);
             processParsedData(element);
             xmlReader.nextTag();
         }
 
     }
     
-    public abstract void processParsedData(JAXBElement<T> element);
+    public abstract void processParsedData(JAXBElement<AddressObjects.Object> element);
 }
