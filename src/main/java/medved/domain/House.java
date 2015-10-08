@@ -24,11 +24,11 @@ public class House {
     @JoinColumn(name = "AOGUID", nullable = false)
     private AddrObj parentObj;
     
-    @Column(name = "HOUSEMUN", nullable = false)
+    @Column(name = "HOUSEMUN")
     private String houseNum;
     
     @Field
-    @Column(name = "POSTALCODE", length = 6, nullable = false)
+    @Column(name = "POSTALCODE")
     private String postalCode;
 
     public House() {}
@@ -99,10 +99,21 @@ public class House {
     @Override
     public int hashCode() {
         int result = houseGuid != null ? houseGuid.hashCode() : 0;
-        result = 31 * result + (houseId != null ? houseId.hashCode() : 0);
+        result = 31 * result + houseId.hashCode();
         result = 31 * result + parentObj.hashCode();
         result = 31 * result + (houseNum != null ? houseNum.hashCode() : 0);
         result = 31 * result + (postalCode != null ? postalCode.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "House{" +
+                "houseGuid=" + houseGuid +
+                ", houseId=" + houseId +
+                ", parentObj=" + parentObj +
+                ", houseNum='" + houseNum + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                '}';
     }
 }

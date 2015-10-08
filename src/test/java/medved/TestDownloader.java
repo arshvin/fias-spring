@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package medved.domain;
+package medved;
 
 /**
  *
  * @author arshvin
  */
-public class TestSearchDSL {
+public class TestDownloader {
     
 }

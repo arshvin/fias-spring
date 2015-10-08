@@ -7,6 +7,7 @@ package medved.parsers;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.lang.reflect.ParameterizedType;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -16,6 +17,8 @@ import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import medved.generated.AddressObjects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -23,14 +26,19 @@ import medved.generated.AddressObjects;
  */
 public abstract class AbstractParser<T>{
     protected String sourceFile;
-    private final Class clazz;
-    
-    public AbstractParser(String sourceFile) {
-        //this.clazz = (Class<T>) ClassLoader.getSystemClassLoader().getClass();
-        this.clazz = AddressObjects.Object.class;
+
+    private final Class<T> clazz;
+
+    private Logger log = LoggerFactory.getLogger(AbstractParser.class);
+
+    public AbstractParser() {
+        clazz = (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    }
+
+    public void feed(String sourceFile) {
         this.sourceFile = sourceFile;
     }
- 
+
     public void parse() throws FileNotFoundException, XMLStreamException, JAXBException {
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         XMLStreamReader xmlReader = xmlInputFactory.createXMLStreamReader(new FileReader(sourceFile));
@@ -41,12 +49,12 @@ public abstract class AbstractParser<T>{
         xmlReader.nextTag(); //<AddrObj> or <House>
         
         while (xmlReader.getEventType() == START_ELEMENT){
-            JAXBElement<AddressObjects.Object> element = unmarshaller.unmarshal(xmlReader, clazz);
+            JAXBElement<T> element = unmarshaller.unmarshal(xmlReader, clazz);
             processParsedData(element);
             xmlReader.nextTag();
         }
 
     }
     
-    public abstract void processParsedData(JAXBElement<AddressObjects.Object> element);
+    protected abstract void processParsedData(JAXBElement<T> element);
 }

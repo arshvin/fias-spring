@@ -8,33 +8,36 @@ package medved.parsers;
 import static java.lang.String.format;
 import java.util.UUID;
 import javax.xml.bind.JAXBElement;
+
+import medved.domain.AddrObj;
 import medved.domain.AddrObjRepository;
 import medved.generated.AddressObjects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static org.slf4j.LoggerFactory.getLogger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author arshvin
  */
+@Component
 public class AddrObjParser extends AbstractParser<AddressObjects.Object> {
+
     @Autowired
     private AddrObjRepository repo;
     
     private Logger log = LoggerFactory.getLogger(AddrObjParser.class);
-    
-    public AddrObjParser(String sourceFile) {
-        super(sourceFile);
-    }
 
     @Override
-    public void processParsedData(final JAXBElement<AddressObjects.Object> element) {
+    protected void processParsedData(final JAXBElement<AddressObjects.Object> element) {
         AddressObjects.Object modelAddrObj = element.getValue();
-        log.info("Parsed object is {0}", modelAddrObj);
-        log.info("UUID.fromString(modelAddrObj.getAOGUID()) returns %s", UUID.fromString(modelAddrObj.getAOGUID()));
-        medved.domain.AddrObj tmpAddrObj = repo.findByAoGuid(UUID.fromString(modelAddrObj.getAOGUID()));
+
+        log.debug(format("Parsed object is %s", modelAddrObj));
+
+        assert repo != null;
+
+        AddrObj tmpAddrObj = repo.findByAoGuid(UUID.fromString(modelAddrObj.getAOGUID()));
         if ((tmpAddrObj == null) ||
                 (modelAddrObj.getNEXTID() == null &&
                     !UUID.fromString(modelAddrObj.getAOID()).equals(tmpAddrObj.getAoId()))){
@@ -53,8 +56,13 @@ public class AddrObjParser extends AbstractParser<AddressObjects.Object> {
             tmpAddrObj.setOfficialName(modelAddrObj.getOFFNAME());
             tmpAddrObj.setPostalCode(modelAddrObj.getPOSTALCODE());
             tmpAddrObj.setShortName(modelAddrObj.getSHORTNAME());
+
+            log.debug(format("Saving domain object %s", tmpAddrObj));
+
             repo.save(tmpAddrObj);
         }
+
+        log.debug(String.format("Domanin object %s is actual. Skiping", tmpAddrObj));
     }
     
 }

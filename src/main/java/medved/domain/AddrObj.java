@@ -27,7 +27,7 @@ public class AddrObj {
     private UUID aoId;
 
     @ManyToOne
-    @JoinColumn(name = "PARENTGUID", nullable = true)
+    @JoinColumn(name = "PARENTGUID")
     private AddrObj parentObj;
 
     @Field
@@ -35,14 +35,14 @@ public class AddrObj {
     private String formalName;
 
     @Field
-    @Column(name = "OFFNAME", nullable = false)
+    @Column(name = "OFFNAME")
     private String officialName;
 
     @Column(name = "SHORTNAME", nullable = false)
     private String shortName;
 
     @Field
-    @Column(name = "POSTALCODE", length = 6, nullable = false)
+    @Column(name = "POSTALCODE", length = 6)
     private String postalCode;
 
     public AddrObj() {
@@ -137,9 +137,22 @@ public class AddrObj {
         result = 31 * result + aoId.hashCode();
         result = 31 * result + (parentObj != null ? parentObj.hashCode() : 0);
         result = 31 * result + formalName.hashCode();
-        result = 31 * result + officialName.hashCode();
+        result = 31 * result + (officialName != null ? officialName.hashCode() : 0);
         result = 31 * result + shortName.hashCode();
-        result = 31 * result + postalCode.hashCode();
+        result = 31 * result + (postalCode != null ? postalCode.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "AddrObj{" +
+                "aoGuid=" + aoGuid +
+                ", aoId=" + aoId +
+                ", parentObj=" + parentObj +
+                ", formalName='" + formalName + '\'' +
+                ", officialName='" + officialName + '\'' +
+                ", shortName='" + shortName + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                '}';
     }
 }

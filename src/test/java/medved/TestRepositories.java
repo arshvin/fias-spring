@@ -1,6 +1,11 @@
-package medved.domain;
+package medved;
 
 import static org.junit.Assert.*;
+
+import medved.domain.AddrObj;
+import medved.domain.AddrObjRepository;
+import medved.domain.House;
+import medved.domain.HouseRepository;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +21,7 @@ import org.junit.Ignore;
 /**
  * Created by arshvin on 26.05.15.
  */
-@Ignore("how have been passed test code. Disactivated temporally for quikness...")
+//@Ignore("Disactivated temporally for quikness...")
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = medved.App.class)
 @FixMethodOrder(value = MethodSorters.NAME_ASCENDING)

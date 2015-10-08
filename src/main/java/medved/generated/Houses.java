@@ -419,6 +419,17 @@ public class Houses {
         @XmlAttribute(name = "COUNTER", required = true)
         protected BigInteger counter;
 
+        @Override
+        public String toString() {
+            return "House{" +
+                    "housenum='" + housenum + '\'' +
+                    ", postalcode='" + postalcode + '\'' +
+                    ", aoguid='" + aoguid + '\'' +
+                    ", houseid='" + houseid + '\'' +
+                    ", houseguid='" + houseguid + '\'' +
+                    '}';
+        }
+
         /**
          * Gets the value of the postalcode property.
          * 
