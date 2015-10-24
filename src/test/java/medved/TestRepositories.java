@@ -7,23 +7,23 @@ import medved.domain.AddrObjRepository;
 import medved.domain.House;
 import medved.domain.HouseRepository;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 import java.util.UUID;
-import org.junit.Ignore;
 
 /**
  * Created by arshvin on 26.05.15.
  */
 //@Ignore("Disactivated temporally for quikness...")
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = medved.App.class)
+@ContextConfiguration(classes = ConfigApp.class)
 @FixMethodOrder(value = MethodSorters.NAME_ASCENDING)
 public class TestRepositories {
 
@@ -195,6 +195,7 @@ public class TestRepositories {
         assertEquals(2, house3.size());
     }
 
+    @Ignore
     @Test
     public void test3SimpleUpdate(){
         AddrObj addrObj = addrObjRepository.findByFormalName("Пушкина");
@@ -206,6 +207,7 @@ public class TestRepositories {
         houseRepository.save(houseObj);
     }
 
+    @Ignore
     @Test
     public void test4SimpleDelete(){
         List<House> houses = (List<House>) houseRepository.findAll();

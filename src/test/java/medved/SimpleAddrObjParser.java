@@ -4,6 +4,7 @@ import medved.domain.AddrObj;
 import medved.parsers.AbstractParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBElement;
@@ -12,6 +13,7 @@ import javax.xml.bind.JAXBElement;
  * Created by arshvin on 11.10.15.
  */
 @Component
+@Qualifier("simpleParser1")
 public class SimpleAddrObjParser extends AbstractParser<AddrObj> {
     Logger log = LoggerFactory.getLogger(SimpleAddrObjParser.class);
 

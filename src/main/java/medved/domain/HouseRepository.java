@@ -6,7 +6,9 @@
 package medved.domain;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +17,8 @@ import java.util.UUID;
  *
  * @author arshvin
  */
+@Repository
+@Transactional
 public interface HouseRepository extends CrudRepository<House, UUID> {
 
     House findByHouseNum(String houseNum);

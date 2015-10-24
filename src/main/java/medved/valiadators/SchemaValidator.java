@@ -32,12 +32,17 @@ public class SchemaValidator {
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema = factory.newSchema(new File(schemaFileName));
         Validator validator = schema.newValidator();
+
+        Boolean errors = false;
+
         ErrorHandler errHandler = new ErrorHandler() {
-            public void error( SAXParseException e ) {
+            public void error( SAXParseException e ){
                 log.info(String.valueOf(e));
+                e.printStackTrace();
             }
             public void fatalError( SAXParseException e ) {
                 log.info(String.valueOf(e));
+                e.printStackTrace();
             }
             public void warning( SAXParseException e ) {
                 log.info(String.valueOf(e));

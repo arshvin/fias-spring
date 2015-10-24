@@ -16,14 +16,14 @@ public class House {
     @Column(name = "HOUSEGUID")
     private UUID houseGuid;
 
-    @Field
     @Column(name = "HOUSEID", nullable = false)
     private UUID houseId;
 
     @ManyToOne
     @JoinColumn(name = "AOGUID", nullable = false)
     private AddrObj parentObj;
-    
+
+    @Field
     @Column(name = "HOUSEMUN")
     private String houseNum;
     

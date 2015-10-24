@@ -5,10 +5,14 @@
  */
 package medved;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.AbstractEntityManagerFactoryBean;
+
 /**
  *
  * @author arshvin
  */
 public class TestSearchDSL {
-    
+    @Autowired
+    AbstractEntityManagerFactoryBean emf;
 }

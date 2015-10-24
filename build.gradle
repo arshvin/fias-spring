@@ -1,12 +1,11 @@
 apply plugin: 'java'
-apply plugin: 'spring-boot'
 
 version = "0.1"
 group = 'medved'
 
 description = "FIAS"
 
-logging.captureStandardOutput LogLevel.DEBUG
+//logging.captureStandardOutput LogLevel.DEBUG
 
 repositories{
     mavenLocal()
@@ -19,25 +18,25 @@ jar {
 }
 
 dependencies{
-    compile "org.springframework.boot:spring-boot-starter-web:1.2.3.RELEASE"
-    compile "org.springframework.boot:spring-boot-starter-data-jpa:1.2.3.RELEASE"
-    compile "org.springframework.boot:spring-boot-starter-tomcat:1.2.3.RELEASE"
+    compile "org.springframework:spring-orm:4.2.2.RELEASE"
+    compile "org.springframework.data:spring-data-jpa:1.9.0.RELEASE"
+    compile "org.springframework:spring-context:4.2.2.RELEASE"
+
     compile "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final"
     compile "org.hibernate:hibernate-search:4.5.3.Final"
+    compile "org.hibernate:hibernate-entitymanager:4.3.6.Final"
+
     compile "org.slf4j:slf4j-api:1.7.12"
-    
-    testCompile "org.springframework.boot:spring-boot-starter-test:1.2.3.RELEASE"
+    compile "org.slf4j:slf4j-simple:1.7.12"
+
     testCompile "junit:junit:4.11"
     testCompile "com.h2database:h2:1.4.185"
+    testCompile "org.springframework:spring-test:4.2.2.RELEASE"
 }
 
 buildscript {
     repositories {
         mavenLocal()
         mavenCentral()
-    }
-    
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.1.4.RELEASE")
     }
 }

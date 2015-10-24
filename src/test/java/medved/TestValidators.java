@@ -1,6 +1,7 @@
 package medved;
 
 import medved.valiadators.SchemaValidator;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 

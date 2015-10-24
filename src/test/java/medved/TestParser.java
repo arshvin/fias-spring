@@ -5,25 +5,26 @@
  */
 package medved;
 
-import java.io.FileNotFoundException;
-import java.util.UUID;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
 import medved.domain.AddrObjRepository;
-
 import medved.domain.HouseRepository;
 import medved.parsers.AddrObjParser;
 import medved.parsers.HouseParser;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+import java.io.FileNotFoundException;
+import java.util.UUID;
+
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertNotNull;
 
 /**
  *
@@ -31,19 +32,26 @@ import static org.junit.Assert.assertNotNull;
  */
 //@Ignore("Disactivated temporally for quikness...")
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = medved.App.class)
+@ContextConfiguration(classes = ConfigApp.class)
 @FixMethodOrder(value = MethodSorters.NAME_ASCENDING)
 public class TestParser {
     @Autowired
+    @Qualifier("simpleParser1")
     private SimpleAddrObjParser simpleAddrObjParser;
+
     @Autowired
+    @Qualifier("simpleParser2")
     private SimpleHouseParser simpleHouseParser;
+
     @Autowired
     private AddrObjRepository addrObjRepository;
+
     @Autowired
     private AddrObjParser addrObjParser;
+
     @Autowired
     private HouseRepository houseRepository;
+
     @Autowired
     private HouseParser houseParser;
 

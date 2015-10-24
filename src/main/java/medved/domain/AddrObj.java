@@ -22,7 +22,6 @@ public class AddrObj {
     @Column(name = "AOGUID")
     private UUID aoGuid;
 
-    @Field
     @Column(name = "AOID", unique = true, nullable = false)
     private UUID aoId;
 
