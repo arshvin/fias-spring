@@ -2,15 +2,11 @@ package medved.domain;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 import java.util.Set;
 import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 /**
  * Created by arshvin on 25.05.15.
@@ -44,8 +40,11 @@ public class AddrObj {
     @Column(name = "POSTALCODE", length = 6)
     private String postalCode;
 
-    public AddrObj() {
-    }
+    @OneToMany(mappedBy = "parentObj", cascade = {CascadeType.REMOVE})
+    @IndexedEmbedded(depth = 1)
+    private Set<House> houses;
+
+    public AddrObj() {}
 
     public AddrObj(UUID aoId, UUID aoGuid, AddrObj parentObj, String formalName, String officialName, String shortName, String postalCode) {
         this.aoId = aoId;
@@ -55,6 +54,10 @@ public class AddrObj {
         this.officialName = officialName;
         this.shortName = shortName;
         this.postalCode = postalCode;
+    }
+
+    public Set<House> getHouses() {
+        return houses;
     }
 
     public UUID getAoId() {

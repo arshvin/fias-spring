@@ -7,9 +7,8 @@ package medved.domain;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
-import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 

@@ -1,5 +1,6 @@
 package medved.domain;
 
+import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
@@ -21,6 +22,7 @@ public class House {
 
     @ManyToOne
     @JoinColumn(name = "AOGUID", nullable = false)
+    @ContainedIn
     private AddrObj parentObj;
 
     @Field

@@ -195,7 +195,6 @@ public class TestRepositories {
         assertEquals(2, house3.size());
     }
 
-    @Ignore
     @Test
     public void test3SimpleUpdate(){
         AddrObj addrObj = addrObjRepository.findByFormalName("Пушкина");
@@ -207,7 +206,6 @@ public class TestRepositories {
         houseRepository.save(houseObj);
     }
 
-    @Ignore
     @Test
     public void test4SimpleDelete(){
         List<House> houses = (List<House>) houseRepository.findAll();

@@ -9,6 +9,7 @@ import medved.domain.AddrObjRepository;
 import medved.domain.HouseRepository;
 import medved.parsers.AddrObjParser;
 import medved.parsers.HouseParser;
+import org.junit.AfterClass;
 import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -16,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -54,6 +56,13 @@ public class TestParser {
 
     @Autowired
     private HouseParser houseParser;
+
+    @AfterClass
+    public static void cleanPersistedData(){
+        AddrObjRepository addrObjRepository = (AddrObjRepository)
+                new AnnotationConfigApplicationContext(ConfigApp.class).getBean("addrObjRepository");
+        addrObjRepository.deleteAll();
+    }
 
     @Test
     public void testSimpleParsers() throws FileNotFoundException, XMLStreamException, JAXBException {

@@ -22,9 +22,9 @@ dependencies{
     compile "org.springframework.data:spring-data-jpa:1.9.0.RELEASE"
     compile "org.springframework:spring-context:4.2.2.RELEASE"
 
-    compile "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final"
-    compile "org.hibernate:hibernate-search:4.5.3.Final"
-    compile "org.hibernate:hibernate-entitymanager:4.3.6.Final"
+    compile 'org.hibernate:hibernate-search:5.5.0.Final'
+    compile "org.hibernate:hibernate-entitymanager:5.0.1.Final"
+    compile 'javax.transaction:jta:1.1'
 
     compile "org.slf4j:slf4j-api:1.7.12"
     compile "org.slf4j:slf4j-simple:1.7.12"
