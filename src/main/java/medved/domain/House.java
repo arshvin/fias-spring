@@ -1,8 +1,7 @@
 package medved.domain;
 
-import org.hibernate.search.annotations.ContainedIn;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
 
 import java.util.UUID;
 import javax.persistence.*;
@@ -14,6 +13,7 @@ import javax.persistence.*;
 @Entity
 public class House {
     @Id
+    @DocumentId
     @Column(name = "HOUSEGUID")
     private UUID houseGuid;
 
@@ -25,11 +25,11 @@ public class House {
     @ContainedIn
     private AddrObj parentObj;
 
-    @Field
+    @Field(index = Index.YES, analyze = Analyze.YES)
     @Column(name = "HOUSEMUN")
     private String houseNum;
-    
-    @Field
+
+    @Field(index = Index.YES, analyze = Analyze.YES)
     @Column(name = "POSTALCODE")
     private String postalCode;
 

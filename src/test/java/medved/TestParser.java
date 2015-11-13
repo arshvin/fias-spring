@@ -57,13 +57,6 @@ public class TestParser {
     @Autowired
     private HouseParser houseParser;
 
-    @AfterClass
-    public static void cleanPersistedData(){
-        AddrObjRepository addrObjRepository = (AddrObjRepository)
-                new AnnotationConfigApplicationContext(ConfigApp.class).getBean("addrObjRepository");
-        addrObjRepository.deleteAll();
-    }
-
     @Test
     public void testSimpleParsers() throws FileNotFoundException, XMLStreamException, JAXBException {
         /**

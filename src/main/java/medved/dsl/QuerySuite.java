@@ -7,8 +7,6 @@ import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -24,7 +22,7 @@ public class QuerySuite<T> {
     private Class<T> clazz;
 
     private Query currentQuery;
-    private FullTextQuery currentFullTextQuery;
+    private FullTextQuery hibernateQuery;
 
     public QuerySuite(EntityManagerFactory entityManagerFactory) {
         clazz = (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
@@ -34,6 +32,13 @@ public class QuerySuite<T> {
         EntityManager em = entityManagerFactory.createEntityManager();
         fullTextEntityManager = Search.getFullTextEntityManager(em);
     }
+//    public QuerySuite(EntityManager entityManager) {
+//        clazz = (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+//        if (clazz != AddrObj.class && clazz != House.class){
+//            throw new IllegalArgumentException("Parameterized type must be AddrObj or House");
+//        }
+//        fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+//    }
     //"formalName", "officialName", "postalCode"
     public QuerySuite<T> simpleQuery(String query, String ...fields){
         QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
@@ -43,12 +48,12 @@ public class QuerySuite<T> {
         return this;
     };
 
-    public List<AddrObj> execute() {
-        currentFullTextQuery = fullTextEntityManager.createFullTextQuery(currentQuery, clazz);
-        return currentFullTextQuery.getResultList();
+    public List execute() {
+        hibernateQuery = fullTextEntityManager.createFullTextQuery(currentQuery, clazz);
+        return hibernateQuery.getResultList();
     };
 
     public int getResultSize(){
-        return currentFullTextQuery.getResultSize();
+        return hibernateQuery.getResultSize();
     };
 }

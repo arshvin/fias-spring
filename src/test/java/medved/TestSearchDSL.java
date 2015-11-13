@@ -11,8 +11,11 @@ import medved.domain.House;
 import medved.domain.HouseRepository;
 import medved.dsl.AddrObjQuerySuite;
 import medved.dsl.HouseQuerySuite;
+import medved.generated.Houses;
 import org.junit.*;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -31,24 +34,21 @@ import java.util.UUID;
 @ContextConfiguration(classes = ConfigApp.class)
 public class TestSearchDSL {
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private AddrObjQuerySuite addrObjQuerySuite;
     @Autowired
     private HouseQuerySuite houseObjQuerySuite;
-
-
-    private static HouseRepository houseRepository;
-    private static AddrObjRepository addrObjRepository;
-
-    @BeforeClass
     @Autowired
-    public static void preparing(){
+    private HouseRepository houseRepository;
+    @Autowired
+    private AddrObjRepository addrObjRepository;
 
-        ApplicationContext context = new AnnotationConfigApplicationContext(ConfigApp.class);
-        houseRepository = (HouseRepository) context.getBean("houseRepository");
-        addrObjRepository = (AddrObjRepository) context.getBean("addrObjRepository");
+    public void preparing() {
 
-        String[][] data1 = {
+        //{aoId, aoGuid, parentObj, formalName, officialName, shortName, postalCode}
+        String[][] addrObjTestData = {
                 {"05918e28-8be0-49ac-8d5a-8805011a1f95","a9a71961-9363-44ba-91b5-ddf0463aebc2",null,
                         "Тамбовская","Тамбовская","обл","393290"},
                 {"30532abb-f4be-4167-8785-6f4929eb1622","cda1b9dd-4a8c-486a-ab25-05229c579774",
@@ -71,15 +71,18 @@ public class TestSearchDSL {
                         "e879c06b-d180-4177-a6ff-4aad5588c6b3","Верхние Брусы","Верхние Брусы","д","301126"},
         };
 
-        for (String [] item : data1){
-            addrObjRepository.save(
-                    new AddrObj(UUID.fromString(item[0]), UUID.fromString(item[1]),
-                            item[2] == null ? null : addrObjRepository.findByAoGuid(UUID.fromString(item[2])),
-                            item[3], item[4], item[5], item[6])
-            );
+        for (String [] item : addrObjTestData){
+            AddrObj a = new AddrObj(UUID.fromString(item[0]), UUID.fromString(item[1]),
+                    item[2] == null ? null : addrObjRepository.findByAoGuid(UUID.fromString(item[2])),
+                    item[3], item[4], item[5], item[6]);
+
+            addrObjRepository.save(a);
+            logger.info(String.format("Object %s has been saved", a));
 
         }
-        String [][] data2 = {
+
+        //{houseId, houseGuid, parentObj, HouseNum, postalCode}
+        String [][] houseTestData = {
                 {"8b306985-8b80-48e2-9ee4-20b94a0b9f66","8b306985-8b80-48e2-9ee4-20b94a0b9f66",
                         "0e8b1e3c-01e0-4ebd-9bfc-584b157b0b31","31","416525"},
                 {"558e60ea-c6e1-4128-b716-1d61b062be62","558e60ea-c6e1-4128-b716-1d61b062be62",
@@ -110,28 +113,51 @@ public class TestSearchDSL {
                         "8dac1393-f914-47f7-b78b-3cbacd8950f2","24","452638"}
         };
 
-        for(String[] item:data2){
-            houseRepository.save(
-                    new House(UUID.fromString(item[0]), UUID.fromString(item[1]),
-                            addrObjRepository.findByAoGuid(UUID.fromString(item[2])), item[3], item[4])
-            );
+        for(String[] item:houseTestData){
+            House h = new House(UUID.fromString(item[0]), UUID.fromString(item[1]),
+                    addrObjRepository.findByAoGuid(UUID.fromString(item[2])), item[3], item[4]);
+            houseRepository.save(h);
+            logger.info(String.format("Object %s has been saved", h));
         }
-
     }
 
-    @AfterClass
-    @Autowired
-    public static void cleaning(){
-        addrObjRepository.deleteAll();
-    }
+//    @AfterClass
+//    public static void cleaning(){
+//        addrObjRepository.deleteAll();
+//    }
 
     @Test
-    public void testBlahBlah(){
-        addrObjQuerySuite.simpleQuery("Тамбовская", "formalName", "officialName").execute();
+    public void testSimpleQuery() {
+
+        preparing();
+
+        @SuppressWarnings("unchecked")
+        List<AddrObj> result = addrObjQuerySuite.simpleQuery("Тамбовская", "formalName", "officialName").execute();
+        Assert.assertEquals(1, addrObjQuerySuite.getResultSize());
+        Assert.assertEquals("05918e28-8be0-49ac-8d5a-8805011a1f95", result.get(0).getAoId().toString());
+
+        result = addrObjQuerySuite.simpleQuery("Московская", "formalName", "officialName").execute();
         Assert.assertEquals(1,addrObjQuerySuite.getResultSize());
-        addrObjQuerySuite.simpleQuery("Московская", "formalName", "officialName").execute();
+        Assert.assertEquals("149c0ccb-51fd-4776-8c6d-000023253cdc", result.get(0).getAoId().toString());
+
+        result = addrObjQuerySuite.simpleQuery("Рассказовский", "formalName", "officialName").execute();
         Assert.assertEquals(1,addrObjQuerySuite.getResultSize());
-        addrObjQuerySuite.simpleQuery("Рассказовский", "formalName", "officialName").execute();
+        Assert.assertEquals("30532abb-f4be-4167-8785-6f4929eb1622",result.get(0).getAoId().toString());
+
+        result = addrObjQuerySuite.simpleQuery("393290", "postalCode").execute();
+        Assert.assertEquals(4,addrObjQuerySuite.getResultSize());
+
+        result = addrObjQuerySuite.simpleQuery("301126", "postalCode").execute();
+        Assert.assertEquals(3,addrObjQuerySuite.getResultSize());
+
+        result = addrObjQuerySuite.simpleQuery("416525", "houses.postalCode").execute();
+        Assert.assertEquals(2,addrObjQuerySuite.getResultSize());
+
+        result = addrObjQuerySuite.simpleQuery("662518", "houses.postalCode").execute();
         Assert.assertEquals(1,addrObjQuerySuite.getResultSize());
+
+        // tests for houses
+
+
     }
 }

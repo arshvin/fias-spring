@@ -1,12 +1,11 @@
 package medved.domain;
 
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
 
+import javax.persistence.*;
 import java.util.Set;
 import java.util.UUID;
-import javax.persistence.*;
 
 /**
  * Created by arshvin on 25.05.15.
@@ -15,6 +14,7 @@ import javax.persistence.*;
 @Entity
 public class AddrObj {
     @Id
+    @DocumentId
     @Column(name = "AOGUID")
     private UUID aoGuid;
 
@@ -25,18 +25,18 @@ public class AddrObj {
     @JoinColumn(name = "PARENTGUID")
     private AddrObj parentObj;
 
-    @Field
+    @Field(index = Index.YES, analyze = Analyze.YES)
     @Column(name = "FORMALNAME", nullable = false)
     private String formalName;
 
-    @Field
+    @Field(index = Index.YES, analyze = Analyze.YES)
     @Column(name = "OFFNAME")
     private String officialName;
 
     @Column(name = "SHORTNAME", nullable = false)
     private String shortName;
 
-    @Field
+    @Field(index = Index.YES, analyze = Analyze.YES)
     @Column(name = "POSTALCODE", length = 6)
     private String postalCode;
 
