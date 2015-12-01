@@ -22,33 +22,10 @@ output.text = ""
 XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance()
 XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(new FileReader(input))
 
-enum typeData {AddrObj, HouseObj}
-tagsToType = ["AddressObjects":typeData.AddrObj, "Houses":typeData.HouseObj]
-xmlStreamReader.
 xmlStreamReader.nextTag()
-
-tagsToType.keySet().each{tag ->
-    try {
-        xmlStreamReader.require(XMLStreamConstants.START_ELEMENT, null, tag )
-        xmlType = tagsToType[tag]
-    } catch (XMLStreamException exception){}
-}
 xmlStreamReader.nextTag()
-filterClosure = {strBuilder, attr ->
-    strBuilder.append("$attr:${xmlStreamReader.getAttributeValue(null, attr)} ") }
 
 while (xmlStreamReader.getEventType() == XMLStreamConstants.START_ELEMENT){
-    StringBuilder outLine = new StringBuilder()
-    closure = filterClosure.curry(outLine)
-    switch (xmlType){
-        case typeData.AddrObj:
-            objAttribList.each closure
-            break
-        case typeData.HouseObj:
-            houseAttribList.each closure
-            break
-    }
-
     while (xmlStreamReader.getEventType() != XMLStreamConstants.END_ELEMENT) {
         xmlStreamReader.next()
     }

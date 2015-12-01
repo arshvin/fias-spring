@@ -23,6 +23,7 @@ public class AddrObj {
 
     @ManyToOne
     @JoinColumn(name = "PARENTGUID")
+    @IndexedEmbedded(depth = 3)
     private AddrObj parentObj;
 
     @Field(index = Index.YES, analyze = Analyze.YES)

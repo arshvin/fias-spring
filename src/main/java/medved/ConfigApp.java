@@ -12,6 +12,7 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.jta.JtaTransactionManager;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -25,6 +26,7 @@ import java.util.Properties;
 @Configuration
 @ComponentScan
 @EnableJpaRepositories
+@EnableWebMvc
 public class ConfigApp
 {
     public static void main(String[] args){

@@ -9,6 +9,6 @@ package medved.jobs;
  *
  * @author arshvin
  */
-public interface Shedulable {
-    
+public interface Job {
+    public void execute();
 }

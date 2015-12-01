@@ -121,11 +121,6 @@ public class TestSearchDSL {
         }
     }
 
-//    @AfterClass
-//    public static void cleaning(){
-//        addrObjRepository.deleteAll();
-//    }
-
     @Test
     public void testSimpleQuery() {
 
