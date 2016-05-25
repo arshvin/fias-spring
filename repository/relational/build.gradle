@@ -1,0 +1,14 @@
+description = "this part is build for relational storage of the data"
+//logging.captureStandardOutput LogLevel.DEBUG
+
+dependencies{
+    compile project(":common")
+
+    compile "org.springframework:spring-orm:$springVersion"
+    compile "org.springframework.data:spring-data-jpa:1.9.0.RELEASE"
+    compile 'org.hibernate:hibernate-search:5.5.0.Final'
+    compile "org.hibernate:hibernate-entitymanager:5.0.1.Final"
+    compile 'javax.transaction:jta:1.1'
+
+    testCompile "junit:junit:4.11"
+}

@@ -1,0 +1,2 @@
+include "admin", "core", "common"
+include "repository:relational"
