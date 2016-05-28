@@ -1,6 +1,6 @@
 ext{
     projectId = ["group":"prived.medved.fias", "ver":"0.0.1"]
-    springVersion = "4.2.2.RELEASE"
+    springVersion = "4.2.6.RELEASE"
 }
 
 allprojects {
@@ -11,6 +11,7 @@ allprojects {
     dependencies{
         compile "org.slf4j:slf4j-api:1.7.12"
         compile "org.slf4j:slf4j-simple:1.7.12"
+        compile "org.projectlombok:lombok:1.16.8"
 
         compile "org.springframework:spring-context:$springVersion"
 
