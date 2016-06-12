@@ -1,20 +1,19 @@
-package medved.fias.admin.config;
+package medved.fias;
 
-import medved.fias.ConfigCore;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**
  * Created by arshvin on 28.05.16.
  */
-public class AdminAppInitiaizer extends AbstractAnnotationConfigDispatcherServletInitializer {
+public class AppInitiaizer extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[] {ConfigCore.class};
+        return new Class<?>[] {ConfigApp.class};
     }
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[] {ConfigAdminApp.class};
+        return new Class<?>[] {ConfigWebApp.class};
     }
 
     @Override

@@ -25,6 +25,7 @@ import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
  *
  * @author arshvin
  */
+@SuppressWarnings("unchecked")
 public abstract class AbstractParser<T>{
     protected String sourceFile;
 

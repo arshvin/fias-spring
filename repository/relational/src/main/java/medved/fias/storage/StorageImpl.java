@@ -30,42 +30,14 @@ public class StorageImpl implements Storage {
     @Override
     public StorageData getById(UUID uuid) {
 
-        return new StorageData() {
-            @Override
-            public String getName() {
-                return "I'm returned by uuid";
-            }
+        return new Data("I'm returned by UUID","I'm orphan", Lists.newArrayList("first","second","third"));
 
-            @Override
-            public String getParent() {
-                return "I'm orphan";
-            }
-
-            @Override
-            public List<String> getChildren() {
-                return Lists.newArrayList("first","second","third");
-            }
-        };
     }
 
     @Override
     public StorageData getByText(String text) {
 
-        return new StorageData() {
-            @Override
-            public String getName() {
-                return "I'm returned by sometext";
-            }
+        return new Data("I'm returned by TEXT","I'm orphan", Lists.newArrayList("first","second","third"));
 
-            @Override
-            public String getParent() {
-                return "I'm orphan";
-            }
-
-            @Override
-            public List<String> getChildren() {
-                return Lists.newArrayList("first","second","third");
-            }
-        };
     }
 }

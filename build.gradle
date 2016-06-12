@@ -1,6 +1,22 @@
+apply plugin: 'war'
+apply plugin: "com.bmuschko.tomcat"
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath "com.bmuschko:gradle-tomcat-plugin:2.2.5"
+    }
+}
+
 ext{
     projectId = ["group":"prived.medved.fias", "ver":"0.0.1"]
     springVersion = "4.2.6.RELEASE"
+    jarBaseName = "fias"
 }
 
 allprojects {
@@ -14,8 +30,6 @@ allprojects {
         compile "org.projectlombok:lombok:1.16.8"
 
         compile "org.springframework:spring-context:$springVersion"
-
-        testCompile "com.h2database:h2:1.4.185"
         testCompile "org.springframework:spring-test:$springVersion"
 
     }
@@ -24,12 +38,10 @@ allprojects {
         mavenLocal()
         mavenCentral()
     }
-}
 
-buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
+    jar {
+        sourceCompatibility = 1.7
+        targetCompatibility = 1.7
     }
 }
 
@@ -38,4 +50,9 @@ dependencies{
     compile project(":common")
     compile project(":repository:relational")
     compile project(":admin")
+
+    def tomcatVersion = '7.0.59'
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
 }

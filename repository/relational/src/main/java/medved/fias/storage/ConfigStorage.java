@@ -1,9 +1,8 @@
 package medved.fias.storage;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.*;
+import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -23,14 +22,15 @@ import java.util.Properties;
 @Configuration
 @ComponentScan
 @EnableJpaRepositories
+@PropertySource("classpath:storage.properties")
 public class ConfigStorage
 {
-    public static void main(String[] args){
-
-    }
+    @Autowired
+    Environment environment;
 
     @Bean
-    public JpaVendorAdapter jpaVendorAdapter(){
+    @Profile("develop")
+    public JpaVendorAdapter jpaVendorAdapterDev(){
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
         adapter.setDatabase(Database.H2);
         adapter.setDatabasePlatform("org.hibernate.dialect.H2Dialect");
@@ -40,7 +40,7 @@ public class ConfigStorage
     }
 
     @Bean
-    @Profile("dev")
+    @Profile("develop")
     public DataSource dataSourceEmbedded(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.h2.Driver");
@@ -51,13 +51,35 @@ public class ConfigStorage
     }
 
     @Bean
+    @Profile("production")
+    public JpaVendorAdapter jpaVendorAdapterProd(){
+        HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
+        adapter.setDatabase(environment.getProperty("database",Database.class));
+        adapter.setDatabasePlatform(environment.getProperty("databasePlatform"));
+        adapter.setShowSql(false);
+        adapter.setGenerateDdl(true);
+        return adapter;
+    }
+
+    @Bean
+    @Profile("production")
+    public DataSource dataSourceExternal(){
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(environment.getProperty("dataSource.driver"));
+        dataSource.setUrl(environment.getProperty("dataSource.url"));
+        dataSource.setUsername(environment.getProperty("dataSource.user"));
+        dataSource.setPassword(environment.getProperty("dataSource.password"));
+        return dataSource;
+    }
+
+    @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSourceEmbedded, JpaVendorAdapter jpaVendorAdapter){
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(dataSourceEmbedded);
         emf.setJpaVendorAdapter(jpaVendorAdapter);
         emf.setPackagesToScan("medved.domain");
         Properties jpaProperties = new Properties();
-        jpaProperties.put("hibernate.hbm2ddl.auto","create");
+        jpaProperties.put("hibernate.hbm2ddl.auto",environment.getProperty("hibernate.hbm2ddl.auto"));
         emf.setJpaProperties(jpaProperties);
         return emf;
     }

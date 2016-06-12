@@ -1,5 +1,8 @@
 description = "this part is build for relational storage of the data"
 //logging.captureStandardOutput LogLevel.DEBUG
+jar{
+    baseName = "$jarBaseName-relational"
+}
 
 dependencies{
     compile project(":common")
@@ -14,4 +17,8 @@ dependencies{
     compile "com.google.guava:guava:19.0"
 
     testCompile "junit:junit:4.11"
+    testCompile "com.h2database:h2:1.4.185"
+
+    runtime "com.h2database:h2:1.4.185"
+
 }
