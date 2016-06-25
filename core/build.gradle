@@ -2,6 +2,7 @@ dependencies {
     compile "org.springframework:spring-webmvc:$springVersion"
     compile project(":common")
     compile "javax.servlet:javax.servlet-api:3.0.1"
+    compile "org.quartz-scheduler:quartz:2.2.3"
 }
 
 jar{
