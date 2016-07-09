@@ -1,4 +1,4 @@
-package medved.fias.downloaders;
+package medved.fias.content.downloaders;
 
 import java.io.File;
 import java.net.URI;

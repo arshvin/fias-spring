@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package medved.fias.parsers;
+package medved.fias.content.parsers;
 
 import medved.fias.schema.AddressObjects;
 import org.slf4j.Logger;

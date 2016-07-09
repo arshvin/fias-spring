@@ -1,9 +1,8 @@
 package medved.fias.web;
 
-import medved.fias.interchange.Storage;
-import medved.fias.interchange.StorageData;
+import medved.fias.content.DataStorage;
+import medved.fias.content.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -15,15 +14,15 @@ import java.util.UUID;
 public class SearchServlet {
 
     @Autowired
-    private Storage storage;
+    private DataStorage dataStorage;
 
     @RequestMapping(value = "name", method = RequestMethod.GET)
-    StorageData requestByQuery(@RequestParam(name = "query") String name){
-        return storage.getByText(name);
+    Data requestByQuery(@RequestParam(name = "query") String name){
+        return dataStorage.getObjectByContent(name);
     }
 
     @RequestMapping(value = "uuid/{id}", method = RequestMethod.GET)
-    StorageData requestByUuid(@PathVariable("id") UUID uuid){
-        return storage.getById(uuid);
+    Data requestByUuid(@PathVariable("id") UUID uuid){
+        return dataStorage.getObjectByGuid(uuid);
     }
 }

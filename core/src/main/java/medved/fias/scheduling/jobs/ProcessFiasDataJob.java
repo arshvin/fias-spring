@@ -1,10 +1,8 @@
-package medved.fias.jobs;
+package medved.fias.scheduling.jobs;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-
-import java.util.Map;
 
 /**
  * Created by arshvin on 25.06.16.

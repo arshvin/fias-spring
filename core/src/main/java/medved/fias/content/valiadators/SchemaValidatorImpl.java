@@ -1,4 +1,4 @@
-package medved.fias.valiadators;
+package medved.fias.content.valiadators;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

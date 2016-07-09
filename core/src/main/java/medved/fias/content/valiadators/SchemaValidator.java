@@ -1,4 +1,4 @@
-package medved.fias.valiadators;
+package medved.fias.content.valiadators;
 
 import org.xml.sax.SAXException;
 

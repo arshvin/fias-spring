@@ -1,7 +1,5 @@
 package medved.fias.storage;
 
-import medved.fias.interchange.StorageData;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -13,17 +11,29 @@ import java.util.List;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Data implements StorageData {
+public class Data implements medved.fias.content.Data {
     private String name;
     private String parent;
     @XmlElement(name = "children")
-    private List<String> child;
+    private List<String> children;
 
     public Data() {}
 
     public Data(String name, String parent, List<String> child) {
         this.name = name;
         this.parent = parent;
-        this.child = child;
+        this.children = child;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getParent() {
+        return parent;
+    }
+
+    public List<String> getChildren() {
+        return children;
     }
 }

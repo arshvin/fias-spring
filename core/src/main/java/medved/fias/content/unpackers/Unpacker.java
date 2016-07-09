@@ -1,4 +1,4 @@
-package medved.fias.unpackers;
+package medved.fias.content.unpackers;
 
 import java.io.File;
 

@@ -1,4 +1,4 @@
-package medved.fias.loaders;
+package medved.fias.content.loaders;
 
 import java.io.File;
 

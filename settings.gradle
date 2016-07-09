@@ -1,2 +1,4 @@
-include "admin", "core", "common"
+include "core"
+include "common"
+include "admin"
 include "repository:relational"

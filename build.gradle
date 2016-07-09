@@ -1,5 +1,6 @@
 apply plugin: 'war'
 apply plugin: "com.bmuschko.tomcat"
+apply plugin: "maven"
 
 buildscript {
     repositories {
@@ -13,10 +14,18 @@ buildscript {
     }
 }
 
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file:///home/arshvin/.m2/repository/")
+        }
+    }
+}
+
 ext{
     projectId = ["group":"prived.medved.fias", "ver":"0.0.1"]
     springVersion = "4.2.6.RELEASE"
-    jarBaseName = "fias"
+    jarBaseName = "fias-service"
 }
 
 allprojects {

@@ -1,4 +1,4 @@
-package medved.fias.parsers;
+package medved.fias.content.parsers;
 
 import java.io.File;
 

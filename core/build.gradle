@@ -1,3 +1,4 @@
+
 dependencies {
     compile "org.springframework:spring-webmvc:$springVersion"
     compile project(":common")
@@ -8,3 +9,6 @@ dependencies {
 jar{
     baseName = "$jarBaseName-core"
 }
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7

@@ -1,5 +1,25 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'fi.jasoft.plugin.vaadin' version '0.10.7'
+}
+
+apply plugin: 'idea'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.13'
+}
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
 dependencies{
-    compile "org.springframework:spring-webmvc:$springVersion"
+    /*compile "org.springframework:spring-webmvc:$springVersion"*/
     compile project(":core")
     compile project(":common")
 }
