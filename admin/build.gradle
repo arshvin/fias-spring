@@ -22,4 +22,9 @@ dependencies{
     /*compile "org.springframework:spring-webmvc:$springVersion"*/
     compile project(":core")
     compile project(":common")
+
+    compile "com.vaadin:vaadin-themes:7.6.6"
+    compile "com.vaadin:vaadin-push:7.6.6"
+    compile "com.vaadin:vaadin-bom:7.6.6"
+    compile "com.vaadin:vaadin-server:7.6.6"
 }
