@@ -3,6 +3,7 @@ buildscript {
         mavenLocal()
         mavenCentral()
     }
+
 }
 
 plugins {
@@ -15,6 +16,14 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.13'
 }
 
+vaadin{
+    version = "7.6.6"
+    manageDependencies = true
+    manageRepositories = true
+
+    //push = true
+}
+
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
@@ -22,4 +31,10 @@ dependencies{
     /*compile "org.springframework:spring-webmvc:$springVersion"*/
     compile project(":core")
     compile project(":common")
+
+    compile "com.vaadin:vaadin-themes:7.6.6"
+    compile "com.vaadin:vaadin-push:7.6.6"
+    compile "com.vaadin:vaadin-bom:7.6.6"
+    compile "com.vaadin:vaadin-server:7.6.6"
+
 }

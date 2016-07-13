@@ -13,6 +13,7 @@ public interface DataStorage {
     void putHouse(Houses.House house);
     Data getObjectByGuid(UUID uuid);
     Data getObjectByContent(String text);
+    //TODO: It's probably an mistake to return the Data object rather than list of the objects. To think
     Data getAddrObjAll();
     Data getHousesAll();
     Long getAddrObjCount();
