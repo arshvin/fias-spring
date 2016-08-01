@@ -8,14 +8,25 @@ import java.util.concurrent.Future;
  * Created by arshvin on 25.06.16.
  */
 public class SimpleDownloader implements Downloader {
-    @Override
-    public void setUri(URI uri) {
+    private File destinationFile;
+    private URI sourceUri;
+    private URI CheckUri;
 
+    @Override
+    public void setSourceUri(URI uri) {
+
+        sourceUri = uri;
+    }
+
+    public void setCheckUri(URI uri){
+
+        CheckUri = uri;
     }
 
     @Override
     public void setDestinaton(File file) {
 
+        destinationFile = file;
     }
 
     @Override
