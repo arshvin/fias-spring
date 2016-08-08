@@ -28,12 +28,15 @@ public class SimpleDownloader implements Downloader {
 
         destinationFile = file;
     }
-
+    //TODO: implement the checkUpdate() method
     @Override
     public Boolean checkUpdate() {
         return null;
     }
 
+    /**TODO: implement the download() method
+      The method should return the specific exception if it occurs failure
+    */
     @Override
     public Future<Boolean> download() {
         return null;

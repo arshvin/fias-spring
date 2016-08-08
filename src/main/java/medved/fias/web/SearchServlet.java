@@ -18,11 +18,11 @@ public class SearchServlet {
 
     @RequestMapping(value = "name", method = RequestMethod.GET)
     Data requestByQuery(@RequestParam(name = "query") String name){
-        return dataStorage.getObjectByContent(name);
+        return dataStorage.getObjectBy(name);
     }
 
     @RequestMapping(value = "uuid/{id}", method = RequestMethod.GET)
     Data requestByUuid(@PathVariable("id") UUID uuid){
-        return dataStorage.getObjectByGuid(uuid);
+        return dataStorage.getObjectBy(uuid);
     }
 }

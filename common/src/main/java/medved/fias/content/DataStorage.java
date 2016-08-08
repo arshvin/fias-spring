@@ -2,7 +2,9 @@ package medved.fias.content;
 
 import medved.fias.schema.AddressObjects;
 import medved.fias.schema.Houses;
+import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -11,11 +13,10 @@ import java.util.UUID;
 public interface DataStorage {
     void putAddrObj(AddressObjects.Object addressObject);
     void putHouse(Houses.House house);
-    Data getObjectByGuid(UUID uuid);
-    Data getObjectByContent(String text);
-    //TODO: It's probably an mistake to return the Data object rather than list of the objects. To think
-    Data getAddrObjAll();
-    Data getHousesAll();
+    Data getObjectBy(UUID uuid);
+    Data getObjectBy(String content);
+    List<Data> getAddrObjAll(Pageable pageable);
+    List<Data> getHousesAll(Pageable pageable);
     Long getAddrObjCount();
     Long getHousesCount();
 

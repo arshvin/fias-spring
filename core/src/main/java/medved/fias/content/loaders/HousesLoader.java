@@ -6,6 +6,7 @@ import java.io.File;
  * Created by arshvin on 24.06.16.
  */
 public class HousesLoader implements DataInputLoader {
+    //TODO: implement the method processDataFile()
     @Override
     public void processDataFile(File inputFile) {
 

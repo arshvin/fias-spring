@@ -21,6 +21,7 @@ import java.io.IOException;
 public class SchemaValidatorImpl implements SchemaValidator{
     private Logger log = LoggerFactory.getLogger(SchemaValidatorImpl.class);
 
+    //TODO: Checkout that the method examine() is actual
     public boolean examine(String schemaFileName, String validatedFileName) throws SAXException, IOException {
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema = factory.newSchema(new File(schemaFileName));

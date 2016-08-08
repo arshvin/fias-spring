@@ -19,6 +19,7 @@ import java.util.Properties;
  * Hello world!
  *
  */
+//TODO: Recognize what kind of the details should be here, but some of them will be taken away to core module
 @Configuration
 @ComponentScan
 @EnableJpaRepositories

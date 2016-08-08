@@ -15,6 +15,7 @@ public class HouseParser extends AbstractParser<Houses.House> {
 
     private Logger log = LoggerFactory.getLogger(HouseParser.class);
 
+    //TODO: implement the method processParsedData()
     @Override
     protected void processParsedData(JAXBElement<Houses.House> element) {
         Houses.House modelHouse = element.getValue();
