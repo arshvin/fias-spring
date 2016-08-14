@@ -11,15 +11,15 @@ import java.util.List;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Data implements medved.fias.content.Data {
+public class DataImpl implements medved.fias.content.Data {
     private String name;
     private String parent;
     @XmlElement(name = "children")
     private List<String> children;
 
-    public Data() {}
+    public DataImpl() {}
 
-    public Data(String name, String parent, List<String> child) {
+    public DataImpl(String name, String parent, List<String> child) {
         this.name = name;
         this.parent = parent;
         this.children = child;

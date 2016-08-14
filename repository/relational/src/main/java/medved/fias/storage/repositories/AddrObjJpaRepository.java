@@ -10,7 +10,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -23,7 +23,7 @@ public interface AddrObjJpaRepository extends CrudRepository<AddrObj,UUID> {
 
     AddrObj findByAoGuid(UUID aoGuid);
     AddrObj findByAoId(UUID aoId);
-    AddrObj findByParentObj(AddrObj parentObj);
+    List<AddrObj> findByParentObj(AddrObj parentObj);
     AddrObj findByShortName(String shortName);
     AddrObj findByOfficialName(String officialName);
     AddrObj findByFormalName(String formalName);

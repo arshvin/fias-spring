@@ -18,7 +18,7 @@ public class HouseSearchImpl extends AbstractQueryBuilder implements FullTextSea
     public HouseSearchImpl(EntityManagerFactory entityManagerFactory) {
         super(entityManagerFactory);
     }
-    
+
     @Override
     public List<House> findByContent(String content, Pageable pageable, String... fields) {
         return buildQuery(content, pageable, fields).execute();
