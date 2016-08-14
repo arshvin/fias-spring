@@ -1,13 +1,24 @@
 package medved.fias.storage;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import medved.fias.content.DataStorage;
 import medved.fias.content.Data;
 import medved.fias.schema.AddressObjects;
 import medved.fias.schema.Houses;
+import medved.fias.storage.domain.AddrObj;
+import medved.fias.storage.domain.House;
+import medved.fias.storage.mappers.DataMapper;
+import medved.fias.storage.repositories.AddrObjJpaRepository;
+import medved.fias.storage.repositories.AddrObjSearchImpl;
+import medved.fias.storage.repositories.HouseJpaRepository;
+import medved.fias.storage.repositories.HouseSearchImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,54 +27,106 @@ import java.util.UUID;
  */
 @Component
 public class DataStorageImpl implements DataStorage {
+    @Autowired
+    private AddrObjJpaRepository addrObjRepository;
+    @Autowired
+    private AddrObjSearchImpl addrObjSearch;
+    @Autowired
+    private HouseJpaRepository houseRepository;
+    @Autowired
+    private HouseSearchImpl houseSearch;
+    @Autowired
+    private DataMapper dataMapper;
+
+
     @Override
     public void putAddrObj(AddressObjects.Object addressObject) {
 
+        addrObjRepository.save(dataMapper.schemaToDomain(addressObject));
+
     }
 
-    //TODO: Implement the method putHouse()
     @Override
     public void putHouse(Houses.House house) {
 
+        houseRepository.save(dataMapper.schemaToDomain(house));
+
     }
 
-    //TODO: Implement the method getObjectBy()
     @Override
-    public Data getObjectBy(UUID uuid) {
+    public Data getObjectsBy(UUID uuid) {
+        AddrObj addrObj = addrObjRepository.findByAoGuid(uuid);
+        if (addrObj == null) {
+            House house = houseRepository.findByHouseGuid(uuid);
+            if (house != null){
+                return dataMapper.domainToData(house);
+            }
+        }
+        else{
+            return dataMapper.domainToData(addrObj);
+        }
 
-        return new medved.fias.storage.Data("I'm returned by UUID","I'm orphan", Lists.newArrayList("first","second","third"));
+        return null;
 
     }
 
-    //TODO: Implement the method getObjectBy()
     @Override
-    public Data getObjectBy(String content) {
+    public List<Data> getObjectsBy(String content, Pageable pageable) {
 
-        return new medved.fias.storage.Data("I'm returned by TEXT","I'm orphan", Lists.newArrayList("first","second","third"));
+        List<Data> addrObjList = FluentIterable.from(addrObjSearch.findByContent(content,pageable,null))
+                .transform(new Function<AddrObj, Data>() {
+                    @Override
+                    public Data apply(AddrObj input) {
+                        return dataMapper.domainToData(input);
+                    }
+                }).toList();
+        List<Data> housesList = FluentIterable.from(houseSearch.findByContent(content,pageable,null))
+                .transform(new Function<House, Data>() {
+                    @Override
+                    public Data apply(House input) {
+                        return dataMapper.domainToData(input);
+                    }
+                }).toList();
+        List result = Lists.newLinkedList(addrObjList);
+        result.addAll(housesList);
+
+        return result;
+
 
     }
 
-    //TODO: Implement the method getAddrObjAll()
     @Override
     public List<Data> getAddrObjAll(Pageable pageable) {
-        return null;
+        return FluentIterable.from(addrObjRepository.findAll()).transform(new Function<AddrObj, Data>() {
+            @Override
+            public Data apply(AddrObj input) {
+                return dataMapper.domainToData(input);
+            }
+        }).toList();
     }
 
-    //TODO: Implement the method getHousesAll()
     @Override
     public List<Data> getHousesAll(Pageable pageable) {
-        return null;
+        return FluentIterable.from(houseRepository.findAll()).transform(new Function<House, Data>() {
+            @Override
+            public Data apply(House input) {
+                return dataMapper.domainToData(input);
+            }
+        }).toList();
     }
 
-    //TODO: Implement the method getAddrObjCount()
     @Override
     public Long getAddrObjCount() {
-        return null;
+
+        return addrObjRepository.count();
+
     }
 
     //TODO: Implement the method getHousesCount()
     @Override
     public Long getHousesCount() {
-        return null;
+
+        return houseRepository.count();
+
     }
 }

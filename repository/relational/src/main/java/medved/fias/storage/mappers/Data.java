@@ -1,4 +1,4 @@
-package medved.fias.storage;
+package medved.fias.storage.mappers;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

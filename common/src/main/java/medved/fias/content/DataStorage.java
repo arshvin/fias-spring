@@ -13,8 +13,8 @@ import java.util.UUID;
 public interface DataStorage {
     void putAddrObj(AddressObjects.Object addressObject);
     void putHouse(Houses.House house);
-    Data getObjectBy(UUID uuid);
-    Data getObjectBy(String content);
+    Data getObjectsBy(UUID uuid);
+    List<Data> getObjectsBy(String content, Pageable pageable);
     List<Data> getAddrObjAll(Pageable pageable);
     List<Data> getHousesAll(Pageable pageable);
     Long getAddrObjCount();

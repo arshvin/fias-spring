@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package medved.fias.storage.domain;
+package medved.fias.storage.repositories;
 
+import medved.fias.storage.domain.AddrObj;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,7 @@ import java.util.UUID;
  */
 @Repository
 @Transactional
-public interface AddrObjRepository extends CrudRepository<AddrObj,UUID> {
+public interface AddrObjJpaRepository extends CrudRepository<AddrObj,UUID> {
 
     AddrObj findByAoGuid(UUID aoGuid);
     AddrObj findByAoId(UUID aoId);

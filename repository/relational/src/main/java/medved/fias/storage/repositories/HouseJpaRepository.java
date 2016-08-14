@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package medved.fias.storage.domain;
+package medved.fias.storage.repositories;
 
+import medved.fias.storage.domain.AddrObj;
+import medved.fias.storage.domain.House;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +20,7 @@ import java.util.UUID;
  */
 @Repository
 @Transactional
-public interface HouseRepository extends CrudRepository<House, UUID> {
+public interface HouseJpaRepository extends CrudRepository<House, UUID> {
 
     House findByHouseNum(String houseNum);
     House findByPostalCode(String postalCode);
