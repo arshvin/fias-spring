@@ -1,8 +1,9 @@
 package medved.fias.scheduling;
 
-import medved.fias.ApplicationEnvironment;
-import org.quartz.SchedulerException;
-import org.quartz.SchedulerFactory;
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
+import medved.fias.AppConfig;
+import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -11,8 +12,14 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import org.springframework.data.domain.Pageable;
-import java.util.LinkedHashMap;
+
+import java.util.AbstractMap;
 import java.util.Map;
+
+import static java.lang.String.format;
+import static org.quartz.CronScheduleBuilder.cronSchedule;
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
  * Created by arshvin on 27.07.16.
@@ -25,13 +32,13 @@ public class SimpleScheduler implements Scheduler {
     private JobStorage jobStorage;
 
     @Autowired
-    private ApplicationEnvironment appConf;
+    //Environments for connection to storage???
+    private AppConfig appConf;
 
     private SchedulerFactory schedulerFactory = new StdSchedulerFactory();
     private org.quartz.Scheduler scheduler;
 
     public SimpleScheduler() {
-
         try {
             scheduler = schedulerFactory.getScheduler();
         } catch (SchedulerException e) {
@@ -39,20 +46,57 @@ public class SimpleScheduler implements Scheduler {
         }
     }
 
-    //TODO: implement the method initialize()
+    private void pushJobToScheduler(JobData jobData) throws SchedulerException {
+        JobDataMap jobDataMap = new JobDataMap(jobData.getConfig());
+        JobDetail job = newJob(jobData.getClazz())
+                .withIdentity(jobData.getName())
+                .usingJobData(jobDataMap)
+                .storeDurably()
+                .build();
+
+        scheduler.addJob(job,true);
+
+        String triggerId = format("%s-%d", "trigger_job", jobData.getId());
+
+        if(jobData.getActive()){
+            Trigger trigger = newTrigger()
+                    .withIdentity(triggerId)
+                    .startNow()
+                    .withSchedule(cronSchedule(jobData.getSchedule()))
+                    .forJob(job)
+                    .build();
+            scheduler.scheduleJob(trigger);
+        } else {
+            scheduler.unscheduleJob(TriggerKey.triggerKey(triggerId));
+        }
+    };
+
     @PostConstruct
     @Override
     public void initialize() {
+
+        Pageable bigPage = new PageRequest(1, jobStorage.getCount().intValue());
+        FluentIterable.from(jobStorage.getAll(bigPage)).transform(new Function<JobData, String>() {
+            @Override
+            public String apply(JobData input) {
+
+                try {
+                    pushJobToScheduler(input);
+                } catch (SchedulerException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+        });
 
         try {
             scheduler.start();
         } catch (SchedulerException e) {
             e.printStackTrace();
         }
-
     }
 
-    //TODO: implement the method shutdown()
     @PreDestroy
     @Override
     public void shutdown() {
@@ -64,8 +108,8 @@ public class SimpleScheduler implements Scheduler {
         }
 
     }
-
-    //TODO: implement the method createJob()
+    /** TODO:Implement updating jobs algorithm (persist and reload form storage to scheduler) if the it is changed by user
+     *  through anyone of method: createJob changeJob eraseJob**/
     @Override
     public void createJob(JobData job) {
 
@@ -73,7 +117,6 @@ public class SimpleScheduler implements Scheduler {
 
     }
 
-    //TODO: implement the method changeJob()
     @Override
     public void changeJob(JobData job) {
 
@@ -81,7 +124,6 @@ public class SimpleScheduler implements Scheduler {
 
     }
 
-    //TODO: implement the method eraseJob()
     @Override
     public void eraseJob(Long id) {
 
@@ -90,13 +132,13 @@ public class SimpleScheduler implements Scheduler {
 
     }
 
-    //TODO: implement the method eraseJob()
     @Override
     public void eraseJob(JobData job) {
 
+        jobStorage.removeJob(job);
+
     }
 
-    //TODO: implement the method showJobDetails()
     @Override
     public JobData showJobDetails(Long id) {
 
@@ -104,15 +146,15 @@ public class SimpleScheduler implements Scheduler {
 
     }
 
-    //TODO: implement the method listJobs()
     @Override
     public Map<Long, String> listJobs(Pageable pageable) {
 
-        LinkedHashMap<Long, String> map = new LinkedHashMap<>();
-
-        for( JobData job: jobStorage.getAll(pageable)){
-            map.put(job.getId(),job.getName());
-        }
+        Map map = FluentIterable.from(jobStorage.getAll(pageable)).toMap(new Function<JobData, Map.Entry<Long,String>>() {
+            @Override
+            public Map.Entry<Long, String> apply(JobData input) {
+                return new AbstractMap.SimpleEntry<Long, String>(input.getId(),input.getName());
+            }
+        });
 
         return map;
 
@@ -121,6 +163,7 @@ public class SimpleScheduler implements Scheduler {
     @Override
     //TODO: implement the method startJob()
     public void startJob(Long id) {
+
 
     }
 

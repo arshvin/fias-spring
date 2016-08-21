@@ -1,13 +1,11 @@
 package medved.fias;
 
-import lombok.Data;
-
 import java.util.Map;
 
 /**
  * Created by arshvin on 25.06.16.
  */
-public class AppConfig implements ApplicationEnvironment{
+public class AppConfigImpl implements AppConfig {
 
     @Override
     public void initialize() {

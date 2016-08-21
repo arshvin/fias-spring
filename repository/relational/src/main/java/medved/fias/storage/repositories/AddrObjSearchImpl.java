@@ -20,7 +20,7 @@ public class AddrObjSearchImpl extends AbstractQueryBuilder implements FullTextS
     }
 
     @Override
-    public List<AddrObj> findByContent(String content, Pageable pageable,String ...fields) {
+    public List<AddrObj> findByContent(String content, Pageable pageable, String ...fields) {
         return buildQuery(content, pageable, fields).execute();
     }
 }

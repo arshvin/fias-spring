@@ -11,6 +11,10 @@ public interface JobData {
     Class getClazz();
     void setName(String name);
     String getName();
-    void setConfig(Map config);
-    Map getConfig();
+    void setConfig(Map<String,String> config);
+    Map<String,String> getConfig();
+    void setSchedule(String schedule);
+    String getSchedule();
+    void setActive(Boolean active);
+    Boolean getActive();
 }

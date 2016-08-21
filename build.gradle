@@ -28,6 +28,10 @@ ext{
     jarBaseName = "fias-service"
 }
 
+test{
+    systemProperty 'spring.profiles.active', 'develop'
+}
+
 allprojects {
     group = projectId.group
     version = projectId.ver
@@ -56,11 +60,15 @@ allprojects {
     }
 }
 
+test{
+    systemProperty("spring.profiles.active","develop")
+}
+
 dependencies{
     compile project(":core")
     compile project(":common")
     compile project(":repository:relational")
-    compile project(":admin")
+    //compile project(":admin")
 
     def tomcatVersion = '7.0.59'
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",

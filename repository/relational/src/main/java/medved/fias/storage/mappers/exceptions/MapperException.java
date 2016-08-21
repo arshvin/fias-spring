@@ -1,4 +1,4 @@
-package medved.fias.storage.mappers;
+package medved.fias.storage.mappers.exceptions;
 
 /**
  * Created by arshvin on 14.08.16.
