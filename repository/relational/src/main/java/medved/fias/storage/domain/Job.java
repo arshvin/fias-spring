@@ -1,7 +1,5 @@
 package medved.fias.storage.domain;
 
-import medved.fias.scheduling.JobData;
-
 import javax.persistence.*;
 import java.util.Map;
 
@@ -15,7 +13,7 @@ public class Job{
     private Long id;
 
     @Column(name = "INSTANCE_OF", nullable = false)
-    private Class clazz;
+    private String className;
 
     @Column(name = "NAME", nullable = false, unique = true)
     private String name;
@@ -34,9 +32,9 @@ public class Job{
 
     public Job() {}
 
-    public Job(Long id, Class clazz, String name, String schedule, Map<String, String> config, Boolean active) {
+    public Job(Long id, String className, String name, String schedule, Map<String, String> config, Boolean active) {
         this.id = id;
-        this.clazz = clazz;
+        this.className = className;
         this.name = name;
         this.schedule = schedule;
         this.config = config;
@@ -51,12 +49,12 @@ public class Job{
         this.id = id;
     }
 
-    public Class getClazz() {
-        return clazz;
+    public String getClassName() {
+        return className;
     }
 
-    public void setClazz(Class clazz) {
-        this.clazz = clazz;
+    public void setClassName(String className) {
+        this.className = className;
     }
 
     public String getName() {

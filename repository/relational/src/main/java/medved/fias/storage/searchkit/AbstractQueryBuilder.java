@@ -5,6 +5,7 @@ import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
@@ -20,8 +21,12 @@ public class AbstractQueryBuilder<T>{
     private final FullTextEntityManager fullTextEntityManager;
     private final Class<T> clazz;
     private FullTextQuery currentQuery;
+    private org.slf4j.Logger logger = LoggerFactory.getLogger(getClass().getName());
 
     public AbstractQueryBuilder(EntityManagerFactory entityManagerFactory) {
+        logger.debug("GenericSuperclass is {}", getClass().getGenericSuperclass());
+        logger.debug("ActualTypeArguments are \'{}\'", String.valueOf(((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()));
+
         clazz = (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         EntityManager em = entityManagerFactory.createEntityManager();
         fullTextEntityManager = Search.getFullTextEntityManager(em);

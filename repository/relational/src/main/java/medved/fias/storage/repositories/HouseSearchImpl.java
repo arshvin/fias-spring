@@ -5,6 +5,7 @@ import medved.fias.storage.searchkit.AbstractQueryBuilder;
 import medved.fias.storage.searchkit.FullTextSearchable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
@@ -12,7 +13,8 @@ import java.util.List;
 /**
  * Created by arshvin on 14.08.16.
  */
-public class HouseSearchImpl extends AbstractQueryBuilder implements FullTextSearchable<House> {
+@Component
+public class HouseSearchImpl extends AbstractQueryBuilder<House> implements FullTextSearchable<House> {
 
     @Autowired
     public HouseSearchImpl(EntityManagerFactory entityManagerFactory) {

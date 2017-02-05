@@ -1,8 +1,6 @@
 package medved.fias.storage;
 
-import org.testng.annotations.Test;
-
-import static org.testng.Assert.*;
+import org.junit.Test;
 
 /**
  * Created by arshvin on 10.08.16.

@@ -10,7 +10,7 @@ import java.util.Map;
 public class JobDataImpl implements JobData {
 
     private Long id;
-    private Class clazz;
+    private String clazz;
     private String name;
     private Map<String, String> config;
     private String schedule;
@@ -19,7 +19,7 @@ public class JobDataImpl implements JobData {
     public JobDataImpl() {
     }
 
-    public JobDataImpl(Long id, Class clazz, String name, Map<String, String> config, String schedule, Boolean active) {
+    public JobDataImpl(Long id, String clazz, String name, Map<String, String> config, String schedule, Boolean active) {
         this.id = id;
         this.clazz = clazz;
         this.name = name;
@@ -38,12 +38,12 @@ public class JobDataImpl implements JobData {
     }
 
     @Override
-    public void setClazz(Class clazz) {
-        this.clazz = clazz;
+    public void setClassName(String className) {
+        this.clazz = className;
     }
 
     @Override
-    public Class getClazz() {
+    public String getClazz() {
         return clazz;
     }
 

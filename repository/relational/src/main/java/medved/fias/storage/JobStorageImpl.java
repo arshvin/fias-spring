@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by arshvin on 05.08.16.
  */
-@Component
+//@Component
 public class JobStorageImpl implements JobStorage {
     @Autowired
     JobsJpaRepository repository;
@@ -59,19 +59,19 @@ public class JobStorageImpl implements JobStorage {
 
     @Override
     public List<JobData> getBy(Class clazz) {
-        List<JobData> result = FluentIterable.from(repository.findByClass(clazz)).transform(new Function<Job, JobData>() {
-            @Override
-            public JobData apply(Job input) {
-                JobData jobData = null;
-                try {
-                    jobData = jobMapper.entityToJob(input);
-                } catch (EntityToJobMapperException e) {
-                    e.printStackTrace();
-                }
-                return jobData;
-            }
-        }).toList();
-
+//        List<JobData> result = FluentIterable.from(repository.findByClazz(clazz)).transform(new Function<Job, JobData>() {
+//            @Override
+//            public JobData apply(Job input) {
+//                JobData jobData = null;
+//                try {
+//                    jobData = jobMapper.entityToJob(input);
+//                } catch (EntityToJobMapperException e) {
+//                    e.printStackTrace();
+//                }
+//                return jobData;
+//            }
+//        }).toList();
+            List result = null;
         return result;
     }
 

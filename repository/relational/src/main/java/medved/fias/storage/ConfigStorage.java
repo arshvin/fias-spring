@@ -52,7 +52,7 @@ public class ConfigStorage
     }
 
     @Bean
-    @Profile("production")
+    @Profile("prod")
     public JpaVendorAdapter jpaVendorAdapterProd(){
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
         adapter.setDatabase(environment.getProperty("database",Database.class));
@@ -63,7 +63,7 @@ public class ConfigStorage
     }
 
     @Bean
-    @Profile("production")
+    @Profile("prod")
     public DataSource dataSourceExternal(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(environment.getProperty("dataSource.driver"));
@@ -78,7 +78,7 @@ public class ConfigStorage
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(dataSourceEmbedded);
         emf.setJpaVendorAdapter(jpaVendorAdapter);
-        emf.setPackagesToScan("medved.domain");
+        emf.setPackagesToScan("medved.fias.storage.domain");
         Properties jpaProperties = new Properties();
         jpaProperties.put("hibernate.hbm2ddl.auto",environment.getProperty("hibernate.hbm2ddl.auto"));
         emf.setJpaProperties(jpaProperties);

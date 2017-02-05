@@ -5,6 +5,7 @@ import medved.fias.storage.searchkit.AbstractQueryBuilder;
 import medved.fias.storage.searchkit.FullTextSearchable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
@@ -12,7 +13,8 @@ import java.util.List;
 /**
  * Created by arshvin on 13.08.16.
  */
-public class AddrObjSearchImpl extends AbstractQueryBuilder implements FullTextSearchable<AddrObj> {
+@Component
+public class AddrObjSearchImpl extends AbstractQueryBuilder<AddrObj> implements FullTextSearchable<AddrObj> {
 
     @Autowired
     public AddrObjSearchImpl(EntityManagerFactory entityManagerFactory) {

@@ -15,5 +15,5 @@ import java.util.List;
 public interface JobsJpaRepository extends PagingAndSortingRepository<Job,Long>{
     Job findById(Long id);
     Job findByName(String name);
-    List<Job> findByClass(Class clazz);
+    List<Job> findByClassName(String className);
 }

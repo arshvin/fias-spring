@@ -24,7 +24,7 @@ uploadArchives {
 
 ext{
     projectId = ["group":"prived.medved.fias", "ver":"0.0.1"]
-    springVersion = "4.2.6.RELEASE"
+    springVersion = "4.3.6.RELEASE"
     jarBaseName = "fias-service"
 }
 
@@ -40,12 +40,12 @@ allprojects {
     dependencies{
         compile "org.slf4j:slf4j-api:1.7.12"
         compile "org.slf4j:slf4j-simple:1.7.12"
-        compile "org.projectlombok:lombok:1.16.8"
+        //compile "org.projectlombok:lombok:1.16.8"
 
         compile "org.springframework.data:spring-data-commons:1.12.1.RELEASE"
         compile "org.springframework:spring-context:$springVersion"
         testCompile "org.springframework:spring-test:$springVersion"
-        testCompile group: 'org.testng', name: 'testng', version: '6.9.10'
+        //testCompile group: 'org.testng', name: 'testng', version: '6.9.10'
 
     }
 
@@ -58,10 +58,6 @@ allprojects {
         sourceCompatibility = 1.7
         targetCompatibility = 1.7
     }
-}
-
-test{
-    systemProperty("spring.profiles.active","develop")
 }
 
 dependencies{
