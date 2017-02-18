@@ -16,7 +16,7 @@ import java.util.*;
  */
 @SuppressWarnings({"Unchecked"})
 public class DataHolderForTests {
-    private static Logger logger = LoggerFactory.getILoggerFactory().getLogger(String.valueOf(DataHolderForTests.class));
+    private static Logger logger = LoggerFactory.getLogger(DataHolderForTests.class);
 
     private static Map<String,Map> data;
     private static String[] housesObj = {
@@ -117,13 +117,14 @@ public class DataHolderForTests {
         data = new HashMap<>();
         String key = "null";
 
-        List<String> mergeredData = new ArrayList();
-        Collections.addAll(mergeredData, addrObj);
-        Collections.addAll(mergeredData, housesObj);
+        List<String> mergedData = new ArrayList();
+        Collections.addAll(mergedData, addrObj);
+        Collections.addAll(mergedData, housesObj);
 
-        for (String line : mergeredData){
+        for (String line : mergedData){
             String [] fields = line.split(";");
-            Map<String,Object> item = new HashMap<>();
+//            Map<String,Object> item = new HashMap<>();
+            Map<String,String> item = new HashMap<>();
 
             Boolean houseFlag = false;
 
@@ -134,26 +135,40 @@ public class DataHolderForTests {
 
                 logger.debug("Field is '{}'", field);
 
-                switch (values[0]) {
-                    case "HOUSEGUID":
-                        houseFlag = true;
-                    case "AOID":
-                    case "AOGUID":
-                    case "HOUSEID":
-                    case "NEXTID":
-                    case "PARENTGUID":
-                        item.put(values[0], UUID.fromString(values[1]));
-                        break;
-                    default:
-                        item.put(values[0], values[1]);
+                if (values[0].equals("HOUSEGUID")) {
+                    houseFlag = true;
+                    logger.debug("The houseFlag was set up to true");
                 }
+//                switch (values[0]) {
+//                    case "HOUSEGUID":
+//                        houseFlag = true;
+//                    case "AOID":
+//                    case "AOGUID":
+//                    case "HOUSEID":
+//                    case "NEXTID":
+//                    case "PARENTGUID":
+//                        item.put(values[0], UUID.fromString(values[1]));
+//                        break;
+//                    default:
+//                        item.put(values[0], values[1]);
+//                }
+                item.put(values[0], values[1]);
+
             }
 
+//            if (houseFlag){
+//                key = (item.get("HOUSEGUID")).toString();
+//            } else {
+//                key = (item.get("AOGUID")).toString();
+//            }
+
             if (houseFlag){
-                key = (item.get("HOUSEGUID")).toString();
+                key = item.get("HOUSEGUID");
             } else {
-                key = (item.get("AOGUID")).toString();
+                key = item.get("AOGUID");
             }
+
+            logger.debug("Saved item is {} with key {} ", item, key);
 
             data.put(key,item);
         }
@@ -163,8 +178,8 @@ public class DataHolderForTests {
         return data;
     }
 
-    private static Map<String,Object> getDataElement(String uuid){
-        Map<String,Object> element = data.get(uuid);
+    private static Map<String, String> getDataElement(String uuid){
+        Map<String,String> element = data.get(uuid);
 
         logger.debug("Fetching {} -> {}", uuid, element);
 
@@ -172,7 +187,7 @@ public class DataHolderForTests {
     };
 
     public static Data getDataBy(String uuid){
-        Map<String,Object> element = getDataElement(uuid);
+        Map<String, String> element = getDataElement(uuid);
         String name;
         String parent;
         List<String> children = new LinkedList<>();
@@ -206,7 +221,8 @@ public class DataHolderForTests {
     public static AddrObj getAddrObjBy (String uuid){
 
         AddrObj result = null;
-        Map<String,Object> element = getDataElement(uuid);
+//        Map<String,Object> element = getDataElement(uuid);
+        Map<String,String> element = getDataElement(uuid);
 
         if (! element.containsKey("HOUSEGUID")){
             /**"AOID:fff01464-bcaa-4fe7-afaf-18b152608ff6 AOGUID:ea88bcba-c562-438a-9115-8b32426b0c8e
@@ -214,26 +230,28 @@ public class DataHolderForTests {
              */
 
             result = new AddrObj();
-            result.setAoId((UUID) element.get("AOID"));
-            result.setAoGuid((UUID) element.get("AOGUID"));
-            result.setFormalName((String) element.get("FORMALNAME"));
-            result.setOfficialName((String) element.get("OFFNAME"));
+            result.setAoId(UUID.fromString(element.get("AOID")));
+            result.setAoGuid(UUID.fromString(element.get("AOGUID")));
+            result.setFormalName(element.get("FORMALNAME"));
+            result.setOfficialName( element.get("OFFNAME"));
+            result.setShortName(element.get("SHORTNAME"));
+            result.setPostalCode(element.get("POSTALCODE"));
 
             logger.debug("The {} has been instantiated", result);
 
             if ( element.containsKey("PARENTGUID" )){
-                Map<String,Object> parent = getDataElement(element.get("PARENTGUID").toString());
+                Map<String, String> parent = getDataElement(element.get("PARENTGUID"));
 
                 logger.debug("Data of Parent Object is {}", parent);
 
                 result.setParentObj(new AddrObj(
-                        (UUID) parent.get("AOID"),
-                        (UUID) parent.get("AOGUID"),
+                        UUID.fromString(parent.get("AOID")),
+                        UUID.fromString(parent.get("AOGUID")),
                         null,
-                        (String) parent.get("FORMALNAME"),
-                        (String) parent.get("OFFNAME"),
-                        null,
-                        null
+                        parent.get("FORMALNAME"),
+                        parent.get("OFFNAME"),
+                        parent.get("SHORTNAME"),
+                        parent.get("POSTALCODE")
                 ));
             }
         }
@@ -244,7 +262,7 @@ public class DataHolderForTests {
     public static House getHouseBy (String uuid){
 
         House result = null;
-        Map<String,Object> element = getDataElement(uuid);
+        Map<String, String> element = getDataElement(uuid);
 
         if ( element.containsKey("HOUSEGUID") ){
             /**AOGUID:a4ab722e-453a-4aed-bb73-728a05e2e27f COUNTER:16 ENDDATE:2079-06-06 ESTSTATUS:2
@@ -252,19 +270,20 @@ public class DataHolderForTests {
                 HOUSENUM:3 POSTALCODE:624606 STARTDATE:1900-01-01 STATSTATUS:0 STRSTATUS:0 UPDATEDATE:2012-05-20",
              */
             result = new House();
-            result.setHouseGuid((UUID) element.get("HOUSEGUID"));
-            result.setHouseId((UUID) element.get("HOUSEID"));
-            result.setHouseNum((String) element.get("HOUSENUM"));
+            result.setHouseGuid(UUID.fromString(element.get("HOUSEGUID")));
+            result.setHouseId(UUID.fromString(element.get("HOUSEID")));
+            result.setHouseNum(element.get("HOUSENUM"));
 
-            Map<String,Object> parent = data.get(element.get("AOGUID"));
+            Map<String, String> parent = getDataElement(element.get("AOGUID").toString());
+
             result.setParentObj(new AddrObj(
-                    (UUID) parent.get("AOID"),
-                    (UUID) parent.get("AOGUID"),
+                    UUID.fromString(parent.get("AOID")),
+                    UUID.fromString(parent.get("AOGUID")),
                     null,
-                    (String) parent.get("FORMALNAME"),
-                    (String) parent.get("OFFNAME"),
-                    null,
-                    null
+                    parent.get("FORMALNAME"),
+                    parent.get("OFFNAME"),
+                    parent.get("SHORTNAME"),
+                    parent.get("POSTALCODE")
             ));
         }
         return result;
@@ -272,7 +291,7 @@ public class DataHolderForTests {
 
     public static AddressObjects.Object getSchemaAddrObjBy (String uuid){
 
-        Map<String,Object> element = getDataElement(uuid);
+        Map<String, String> element = getDataElement(uuid);
         AddressObjects.Object result = null;
 
         /*
@@ -293,7 +312,7 @@ public class DataHolderForTests {
     }
 
     public static Houses.House getSchemaHouseBy (String uuid){
-        Map<String,Object> element = getDataElement(uuid);
+        Map<String, String> element = getDataElement(uuid);
         Houses.House result = null;
 
         /**
@@ -303,10 +322,10 @@ public class DataHolderForTests {
          * */
         if ( element.containsKey("HOUSEGUID" )){
             result = new Houses.House();
-            result.setAOGUID((String) element.get("AOGUID"));
-            result.setHOUSEGUID((String) element.get("HOUSEGUID"));
-            result.setHOUSEID((String) element.get("HOUSEID"));
-            result.setHOUSENUM((String) element.get("HOUSENUM"));
+            result.setAOGUID(element.get("AOGUID"));
+            result.setHOUSEGUID(element.get("HOUSEGUID"));
+            result.setHOUSEID(element.get("HOUSEID"));
+            result.setHOUSENUM(element.get("HOUSENUM"));
         }
 
         return result;

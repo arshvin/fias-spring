@@ -11,8 +11,11 @@ import medved.fias.storage.mappers.exceptions.DomainToDataMapperException;
 import medved.fias.storage.mappers.exceptions.SchemaToDomainMapperException;
 import medved.fias.storage.repositories.AddrObjJpaRepository;
 import medved.fias.storage.repositories.HouseJpaRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +26,7 @@ public class DataMapperImpl implements DataMapper {
 
     private AddrObjJpaRepository addrObjRepository;
     private HouseJpaRepository houseRepository;
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     public DataMapperImpl(AddrObjJpaRepository addrObjRepository, HouseJpaRepository houseRepository) {
         this.addrObjRepository = addrObjRepository;
@@ -33,6 +37,7 @@ public class DataMapperImpl implements DataMapper {
     public AddrObj schemaToDomain(final AddressObjects.Object modelAddrObj) throws SchemaToDomainMapperException {
 
         AddrObj addrObjParent = null;
+
         if (modelAddrObj.getPARENTGUID() != null){
             addrObjParent = addrObjRepository.findByAoGuid(UUID.fromString(modelAddrObj.getPARENTGUID()));
             if (addrObjParent == null){
@@ -68,6 +73,7 @@ public class DataMapperImpl implements DataMapper {
             house.setHouseId(UUID.fromString(modelHouseObject.getHOUSEID()));
             house.setPostalCode(modelHouseObject.getPOSTALCODE());
             house.setParentObj(addrObj);
+            house.setHouseNum(modelHouseObject.getHOUSENUM());
 
             return house;
         }
@@ -85,6 +91,20 @@ public class DataMapperImpl implements DataMapper {
         //Trying find out whether the current addrObject has the children at the his type
         List<AddrObj> childrenAddrObj = addrObjRepository.findByParentObj(addrObj);
         List<String> children = null;
+
+        logger.debug("The components of new Data object are nameObject={}, parentObjectName={}, children ... ",
+                nameObject,parentObjectName);
+
+        if (childrenAddrObj.size() > 0){
+            for (AddrObj addrObj1 : childrenAddrObj){
+                logger.debug("{}", addrObj1);
+            }
+        } else {
+            for (House house : houseRepository.findByParentObj(addrObj)){
+                logger.debug("{}", house);
+            }
+        }
+
         if (childrenAddrObj.size() > 0){
             children = FluentIterable.from(childrenAddrObj).transform(
                     new Function<AddrObj, String>() {

@@ -2,9 +2,12 @@ package medved.fias.storage.domain;
 
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Index;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 import javax.persistence.*;
+import javax.persistence.Entity;
 
 /**
  * Created by arshvin on 25.05.15.
@@ -32,6 +35,9 @@ public class House {
     @Field(index = Index.YES, analyze = Analyze.YES)
     @Column(name = "POSTALCODE")
     private String postalCode;
+
+    @Transient
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     public House() {}
 
@@ -113,7 +119,7 @@ public class House {
         return "House{" +
                 "houseGuid=" + houseGuid +
                 ", houseId=" + houseId +
-                ", parentObj=" + parentObj +
+                ", parentObj_aoGuid=" + (parentObj != null ? parentObj.getAoGuid() : null) +
                 ", houseNum='" + houseNum + '\'' +
                 ", postalCode='" + postalCode + '\'' +
                 '}';

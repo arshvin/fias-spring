@@ -1,5 +1,7 @@
 package medved.fias.storage.domain;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Index;
 
@@ -41,7 +43,7 @@ public class AddrObj {
     @Column(name = "POSTALCODE", length = 6)
     private String postalCode;
 
-    @OneToMany(mappedBy = "parentObj", cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "parentObj", cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
     @IndexedEmbedded(depth = 1)
     private Set<House> houses;
 
@@ -130,7 +132,7 @@ public class AddrObj {
         if (!formalName.equals(addrObj.formalName)) return false;
         if (!officialName.equals(addrObj.officialName)) return false;
         if (!shortName.equals(addrObj.shortName)) return false;
-        return postalCode.equals(addrObj.postalCode);
+        return (postalCode != null ? postalCode.equals(addrObj.postalCode) : postalCode == addrObj.postalCode);
 
     }
 
@@ -142,7 +144,6 @@ public class AddrObj {
         result = 31 * result + formalName.hashCode();
         result = 31 * result + (officialName != null ? officialName.hashCode() : 0);
         result = 31 * result + shortName.hashCode();
-        result = 31 * result + (postalCode != null ? postalCode.hashCode() : 0);
         return result;
     }
 
@@ -151,7 +152,7 @@ public class AddrObj {
         return "AddrObj{" +
                 "aoGuid=" + aoGuid +
                 ", aoId=" + aoId +
-                ", parentObj=" + parentObj +
+                ", parentObj_aoGuid=" + (parentObj != null ? parentObj.getAoGuid() : null) +
                 ", formalName='" + formalName + '\'' +
                 ", officialName='" + officialName + '\'' +
                 ", shortName='" + shortName + '\'' +
