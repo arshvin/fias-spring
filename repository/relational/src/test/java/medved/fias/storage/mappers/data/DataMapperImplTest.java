@@ -8,12 +8,12 @@ import medved.fias.storage.ConfigStorage;
 import medved.fias.storage.DataHolderForTests;
 import medved.fias.storage.domain.AddrObj;
 import medved.fias.storage.domain.House;
+import medved.fias.storage.mappers.exceptions.SchemaToDomainMapperException;
 import medved.fias.storage.repositories.AddrObjJpaRepository;
 import medved.fias.storage.repositories.HouseJpaRepository;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.hamcrest.CoreMatchers;
+import org.junit.*;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.web.client.ExpectedCount;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -42,6 +43,14 @@ public class DataMapperImplTest {
     private HouseJpaRepository houseJpaRepository;
 
     private DataMapper dataMapper = null;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    @After
+    public void after(){
+        addrObjJpaRepository.deleteAll();
+    }
 
     @Before
     public void before(){
@@ -71,8 +80,9 @@ public class DataMapperImplTest {
                 "0c85bd26-3c00-48fa-bb7e-ba54103b5da7", //FORMALNAME:Центральное
                 "a142542c-b625-457b-844d-ba00f54d0074", //FORMALNAME:Молчаны
                 "f52b4fbe-a35b-4cac-9c92-43267674b66c", //FORMALNAME:Иваньково
-                "6bd2b87b-89ae-4e55-a1fa-b208321a65c8", //ORMALNAME:Разнежье
+                "6bd2b87b-89ae-4e55-a1fa-b208321a65c8", //FORMALNAME:Разнежье
                 "57e3991f-e685-4ba2-9cef-9988e6fa5862", //FORMALNAME:Фролово
+                "989df635-a9a0-4d58-85b9-64ed6da7e4cd", //FORMALNAME:Красная Горка - for test of 02970867-4367-45dd-9924-a7c1f6dd52b2
 
         };
 
@@ -111,44 +121,66 @@ public class DataMapperImplTest {
             logger.debug("The {} was saved", house);
 
         }
-
-
-
     }
 
     @Test
     public void testSchemaToDomain() throws Exception {
 
-        AddressObjects.Object addrObjectSchema = new AddressObjects.Object();
-        addrObjectSchema.setAOGUID("1a5eeb18-7835-4f55-9d92-822f6a21737b");
-        addrObjectSchema.setAOID("dea66a01-195e-4e1f-b0b8-88d44add3b0c");
-        addrObjectSchema.setFORMALNAME("Плешково");
-        addrObjectSchema.setOFFNAME("Плешково");
-        addrObjectSchema.setPOSTALCODE("171513");
-        addrObjectSchema.setPARENTGUID("0c85bd26-3c00-48fa-bb7e-ba54103b5da7");
-        addrObjectSchema.setSHORTNAME("д");
+        /**
+         * Tests right behavior of mapping from AddressObjects.Object to AddrObj
+         */
+        AddressObjects.Object addrObjectSchema01 = DataHolderForTests.getSchemaAddrObjBy("1a5eeb18-7835-4f55-9d92-822f6a21737b");
+        logger.debug("AddressObjects.Object is {}", addrObjectSchema01);
 
-        logger.debug("AddressObjects.Object is {}", addrObjectSchema);
+        AddrObj addrObj01 = addrObjJpaRepository.findByAoGuid(UUID.fromString("1a5eeb18-7835-4f55-9d92-822f6a21737b"));
+        AddrObj addrObj02 = dataMapper.schemaToDomain(addrObjectSchema01);
 
-        AddrObj addrObjDomain = dataMapper.schemaToDomain(addrObjectSchema);
-        AddrObj addrObj = addrObjJpaRepository.findByAoGuid(UUID.fromString("1a5eeb18-7835-4f55-9d92-822f6a21737b"));
+        logger.debug("addrObj01={}",addrObj01);
+        logger.debug("addrObj02={}",addrObj02);
 
-        Assert.assertEquals(addrObj, addrObjDomain);
+        Assert.assertEquals(addrObj01, addrObj02);
+
+        /**
+         * Test of throwing exception due to absent of the parent AddrObj
+         *
+         * This object was saved to the DB as the parent of another one.Therefore its parent shouldn't present at the DB
+         */
+        AddressObjects.Object addrObjectSchema02 = DataHolderForTests.getSchemaAddrObjBy("02970867-4367-45dd-9924-a7c1f6dd52b2");
+        logger.debug("AddressObjects.Object is {}", addrObjectSchema02);
+
+        thrown.expect(SchemaToDomainMapperException.class);
+        thrown.expectMessage(CoreMatchers.startsWith("Couldn't find parent Object guid"));
+
+        AddrObj addrObj03 = dataMapper.schemaToDomain(addrObjectSchema02);
+
     }
 
     @Test
     public void testSchemaToDomain1() throws Exception {
 
-        Houses.House houseSchema = new Houses.House();
-        houseSchema.setHOUSEGUID("39d122fc-be61-47b1-be35-dbdee2ed00dc");
-        houseSchema.setAOGUID("1a5eeb18-7835-4f55-9d92-822f6a21737b");
-        houseSchema.setHOUSEID("3d0c507a-9ca3-4b75-98c7-0000008fa749");
-        houseSchema.setHOUSENUM("663");
+        /**
+         * Normal mapping behavior test
+         */
+        Houses.House houseSchema01 = DataHolderForTests.getSchemaHouseBy("39d122fc-be61-47b1-be35-dbdee2ed00dc");
 
-        House houseActual = dataMapper.schemaToDomain(houseSchema);
-        House houseExpected = houseJpaRepository.findByHouseGuid(UUID.fromString("39d122fc-be61-47b1-be35-dbdee2ed00dc"));
+        House house02 = dataMapper.schemaToDomain(houseSchema01);
+        House house01 = houseJpaRepository.findByHouseGuid(UUID.fromString("39d122fc-be61-47b1-be35-dbdee2ed00dc"));
+        logger.debug("house01={}", house01);
+        logger.debug("house02={}", house02);
 
-        Assert.assertEquals(houseExpected,houseActual);
+        Assert.assertEquals(house01, house02);
+
+        /**
+         * Test of throwing exception due to absent of the parent AddrObj
+         */
+        Houses.House houseSchema02 = DataHolderForTests.getSchemaHouseBy("2096ef58-a4ef-4b37-89b1-029b1acf4533");
+        House house03 = houseJpaRepository.findByHouseGuid(UUID.fromString("2096ef58-a4ef-4b37-89b1-029b1acf4533"));
+
+        thrown.expect(SchemaToDomainMapperException.class);
+        thrown.expectMessage(CoreMatchers.startsWith("Couldn't find parent guid"));
+
+        House house04 = dataMapper.schemaToDomain(houseSchema02);
+
 
     }
 
@@ -157,6 +189,7 @@ public class DataMapperImplTest {
 
         AddrObj addrObj = addrObjJpaRepository.findByAoGuid(UUID.fromString("b9ad6dec-d71f-4cce-8a1f-5336bd21dc68"));
 
+        //Data domainToData(AddrObj addrObj) throws DomainToDataMapperException
         Data dataActual = dataMapper.domainToData(addrObj);
 
         Data dataExpected = new DataImpl(
@@ -165,13 +198,25 @@ public class DataMapperImplTest {
                 ImmutableList.copyOf(new String [] {"14","42"})
         );
 
-        Assert.assertEquals(dataExpected,dataActual);
+        Assert.assertEquals(dataExpected, dataActual);
 
     }
-//
-//    @Test
-//    public void testDomainToData1() throws Exception {
-//
-//    }
 
+    @Test
+    public void testDomainToData1() throws Exception {
+
+       House house = houseJpaRepository.findByHouseGuid(UUID.fromString("288c436d-8b82-4ca8-a5b8-6cb3d78d16b0"));
+
+        //Data domainToData(House houseObj) throws DomainToDataMapperException
+        Data dataActual = dataMapper.domainToData(house);
+
+        Data dataExpected = new DataImpl(
+                "83",
+                "Школьная",
+                null
+        );
+
+        Assert.assertEquals(dataExpected, dataActual);
+
+    }
 }

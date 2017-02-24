@@ -25,12 +25,16 @@ public class DataImpl implements medved.fias.content.Data {
     public DataImpl(String name, String parent, List<String> children) {
         this.name = name;
         this.parent = parent;
-        this.children = FluentIterable.from(children).toSortedList(new Comparator<String>() {
+
+        this.children = children != null
+                ? FluentIterable.from(children).toSortedList(new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
                 return Integer.valueOf(o1).compareTo(Integer.valueOf(o2));
             }
-        });
+        })
+                : null;
+
     }
 
     public String getName() {
@@ -54,7 +58,7 @@ public class DataImpl implements medved.fias.content.Data {
 
         if (!name.equals(data.name)) return false;
         if (!parent.equals(data.parent)) return false;
-        return children.equals(data.children);
+        return children != null ? children.equals(data.children) : children == data.children;
     }
 
     @Override

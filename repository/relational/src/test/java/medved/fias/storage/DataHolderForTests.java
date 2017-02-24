@@ -69,7 +69,9 @@ public class DataHolderForTests {
             "AOGUID:989df635-a9a0-4d58-85b9-64ed6da7e4cd;COUNTER:22;ENDDATE:2079-06-06;ESTSTATUS:2;HOUSEGUID:d70776dd-36be-4b96-9a67-f5835fc145d2;HOUSEID:0a8019bb-1df5-4d78-bd3f-000a22a614f9;HOUSENUM:48;POSTALCODE:606383;STARTDATE:2014-01-04;STATSTATUS:0;STRSTATUS:0;UPDATEDATE:2014-09-11",
             "AOGUID:989df635-a9a0-4d58-85b9-64ed6da7e4cd;COUNTER:40;ENDDATE:2079-06-06;ESTSTATUS:2;HOUSEGUID:e74ecd82-c824-4b42-88f6-e4e8917a5e75;HOUSEID:38de8ff8-037b-4c19-88c0-01e61493be25;HOUSENUM:55;POSTALCODE:606383;STARTDATE:2014-01-04;STATSTATUS:0;STRSTATUS:0;UPDATEDATE:2014-09-11",
             "AOGUID:989df635-a9a0-4d58-85b9-64ed6da7e4cd;COUNTER:41;ENDDATE:2079-06-06;ESTSTATUS:2;HOUSEGUID:90cae29c-d7e4-44b9-b0b6-b44836f6c7fa;HOUSEID:8fa3ba93-a8ce-4769-bfe2-0243f40796a7;HOUSENUM:57;POSTALCODE:606383;STARTDATE:2014-01-04;STATSTATUS:0;STRSTATUS:0;UPDATEDATE:2014-09-11",
-            "AOGUID:989df635-a9a0-4d58-85b9-64ed6da7e4cd;COUNTER:34;ENDDATE:2014-01-04;ESTSTATUS:2;HOUSEGUID:2096ef58-a4ef-4b37-89b1-029b1acf4592;HOUSEID:2096ef58-a4ef-4b37-89b1-029b1acf4592;HOUSENUM:39;POSTALCODE:606383;STARTDATE:1956-12-18;STATSTATUS:0;STRSTATUS:0;UPDATEDATE:2011-12-18"
+            "AOGUID:989df635-a9a0-4d58-85b9-64ed6da7e4cd;COUNTER:34;ENDDATE:2014-01-04;ESTSTATUS:2;HOUSEGUID:2096ef58-a4ef-4b37-89b1-029b1acf4592;HOUSEID:2096ef58-a4ef-4b37-89b1-029b1acf4592;HOUSENUM:39;POSTALCODE:606383;STARTDATE:1956-12-18;STATSTATUS:0;STRSTATUS:0;UPDATEDATE:2011-12-18",
+            //Fake House object for exception throwing test
+            "AOGUID:989df635-a9a0-4d58-85b9-64ed6da7e433;COUNTER:34;ENDDATE:2014-01-04;ESTSTATUS:2;HOUSEGUID:2096ef58-a4ef-4b37-89b1-029b1acf4533;HOUSEID:2096ef58-a4ef-4b37-89b1-029b1acf4592;HOUSENUM:39;POSTALCODE:606383;STARTDATE:1956-12-18;STATSTATUS:0;STRSTATUS:0;UPDATEDATE:2011-12-18",
     };
 
     private static String[] addrObj = {
@@ -109,7 +111,7 @@ public class DataHolderForTests {
             "AOGUID:b6ba5716-eb48-401b-8443-b197c9578734;AOID:8d93787b-fd78-4ba6-b2c1-aea49dab0a25;AREACODE:000;ENDDATE:2079-06-06;FORMALNAME:Забайкальский;OFFNAME:Забайкальский;REGIONCODE:75;SHORTNAME:край;STARTDATE:1900-01-01;UPDATEDATE:2011-09-13",
             "AOGUID:b8837188-39ee-4ff9-bc91-fcc9ed451bb3;AOID:18489346-08c0-41f4-9a46-b9d1f5a819d9;AREACODE:000;ENDDATE:2079-06-06;FORMALNAME:Владимирская;OFFNAME:Владимирская;REGIONCODE:33;SHORTNAME:обл;STARTDATE:1900-01-01;UPDATEDATE:2011-09-13",
             "AOGUID:88cd27e2-6a8a-4421-9718-719a28a0a088;AOID:bc7786a4-29dd-44f7-906c-c3bbf387896d;AREACODE:000;ENDDATE:2079-06-06;FORMALNAME:Нижегородская;OFFNAME:Нижегородская;REGIONCODE:52;SHORTNAME:обл;STARTDATE:1900-01-01;UPDATEDATE:2011-09-13",
-            "AOGUID:f10763dc-63e3-48db-83e1-9c566fe3092b;AOID:052751b8-8f2a-447d-a8b2-fc2068c7e613;AREACODE:000;ENDDATE:2079-06-06;FORMALNAME:Ростовская;OFFNAME:Ростовская;REGIONCODE:61;SHORTNAME:обл;STARTDATE:1900-01-01;UPDATEDATE:2011-09-13"
+            "AOGUID:f10763dc-63e3-48db-83e1-9c566fe3092b;AOID:052751b8-8f2a-447d-a8b2-fc2068c7e613;AREACODE:000;ENDDATE:2079-06-06;FORMALNAME:Ростовская;OFFNAME:Ростовская;REGIONCODE:61;SHORTNAME:обл;STARTDATE:1900-01-01;UPDATEDATE:2011-09-13",
     };
 
 
@@ -123,7 +125,6 @@ public class DataHolderForTests {
 
         for (String line : mergedData){
             String [] fields = line.split(";");
-//            Map<String,Object> item = new HashMap<>();
             Map<String,String> item = new HashMap<>();
 
             Boolean houseFlag = false;
@@ -139,28 +140,10 @@ public class DataHolderForTests {
                     houseFlag = true;
                     logger.debug("The houseFlag was set up to true");
                 }
-//                switch (values[0]) {
-//                    case "HOUSEGUID":
-//                        houseFlag = true;
-//                    case "AOID":
-//                    case "AOGUID":
-//                    case "HOUSEID":
-//                    case "NEXTID":
-//                    case "PARENTGUID":
-//                        item.put(values[0], UUID.fromString(values[1]));
-//                        break;
-//                    default:
-//                        item.put(values[0], values[1]);
-//                }
+
                 item.put(values[0], values[1]);
 
             }
-
-//            if (houseFlag){
-//                key = (item.get("HOUSEGUID")).toString();
-//            } else {
-//                key = (item.get("AOGUID")).toString();
-//            }
 
             if (houseFlag){
                 key = item.get("HOUSEGUID");
@@ -306,6 +289,8 @@ public class DataHolderForTests {
             result.setFORMALNAME((String) element.get("FORMALNAME"));
             result.setOFFNAME((String) element.get("OFFNAME"));
             result.setPARENTGUID((String) element.get("PARENTGUID"));
+            result.setPOSTALCODE((String) element.get("POSTALCODE"));
+            result.setSHORTNAME((String) element.get("SHORTNAME"));
         }
 
         return result;

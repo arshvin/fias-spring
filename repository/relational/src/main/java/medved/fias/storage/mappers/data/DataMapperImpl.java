@@ -40,6 +40,9 @@ public class DataMapperImpl implements DataMapper {
 
         if (modelAddrObj.getPARENTGUID() != null){
             addrObjParent = addrObjRepository.findByAoGuid(UUID.fromString(modelAddrObj.getPARENTGUID()));
+
+            logger.debug("addrObjParent of {} is {}", modelAddrObj.getAOGUID(), addrObjParent);
+
             if (addrObjParent == null){
                 throw new SchemaToDomainMapperException(
                         String.format("Couldn't find parent Object guid %s. Processing object %s was skipped",
