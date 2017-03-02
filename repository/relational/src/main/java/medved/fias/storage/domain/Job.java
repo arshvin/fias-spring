@@ -41,6 +41,44 @@ public class Job{
         this.active = active;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Job job = (Job) o;
+
+        if (id != null ? !id.equals(job.id) : job.id != null) return false;
+        if (className != null ? !className.equals(job.className) : job.className != null) return false;
+        if (name != null ? !name.equals(job.name) : job.name != null) return false;
+        if (schedule != null ? !schedule.equals(job.schedule) : job.schedule != null) return false;
+        if (config != null ? !config.equals(job.config) : job.config != null) return false;
+        return active != null ? active.equals(job.active) : job.active == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (className != null ? className.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (schedule != null ? schedule.hashCode() : 0);
+        result = 31 * result + (config != null ? config.hashCode() : 0);
+        result = 31 * result + (active != null ? active.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Job{" +
+                "id=" + id +
+                ", className='" + className + '\'' +
+                ", name='" + name + '\'' +
+                ", schedule='" + schedule + '\'' +
+                ", config=" + config +
+                ", active=" + active +
+                '}';
+    }
+
     public Long getId() {
         return id;
     }

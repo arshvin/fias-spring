@@ -1,10 +1,21 @@
 package medved.fias.storage.mappers.job;
 
 import medved.fias.scheduling.JobData;
+import medved.fias.storage.ConfigStorage;
 import medved.fias.storage.domain.Job;
+import medved.fias.storage.repositories.JobsJpaRepository;
 import org.junit.Assert;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
 import java.util.HashMap;
@@ -16,13 +27,13 @@ import java.util.HashMap;
 /**We don't care about absence of container context. It's needed
  *  testing the component by itself.
  */
-@Ignore("For best time")
 public class JobMapperImplTest {
 
-    private JobMapper mapper = new JobMapperImpl();
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Test
     public void testJobToEntity() throws Exception {
+        //jobData#1
         JobData jobData1 = new JobDataImpl(
                 (long) 1,
                 "SomeName.class",
@@ -32,62 +43,81 @@ public class JobMapperImplTest {
                 false
         );
 
-
+        //jobData#2
         JobData jobData2 = new JobDataImpl();
         ((JobDataImpl) jobData2).setId((long) 2);
         jobData2.setClassName("Blah.class");
         jobData2.setName("Some simple job#2");
 
-        HashMap<String,String> jobConfig1 = new HashMap<>();
-        jobConfig1.put("key1","value1");
-        jobConfig1.put("key2","value2");
-        jobConfig1.put("key3","value3");
+        HashMap<String,String> jobConfig2 = new HashMap<>();
+        jobConfig2.put("key1","value1");
+        jobConfig2.put("key2","value2");
+        jobConfig2.put("key3","value3");
 
-        jobData2.setConfig(jobConfig1);
-        jobData2.setSchedule("* * * * *");
+        jobData2.setConfig(jobConfig2);
+        jobData2.setSchedule("2 3 * * *");
         jobData2.setActive(true);
 
-
+        //jobData#3
         JobData jobData3 = new JobDataImpl();
 
-        HashMap<String,String> jobConfig2 = new HashMap<>();
-        jobConfig1.put("key1","value1");
-        jobConfig1.put("key2","value2");
-        jobConfig1.put("key3","value3");
+        HashMap<String,String> jobConfig3 = new HashMap<>();
+        jobConfig3.put("key1","value1");
+        jobConfig3.put("key2","value2");
+        jobConfig3.put("key3","value3");
 
-        jobData3.setConfig(jobConfig2);
+        jobData3.setConfig(jobConfig3);
 
 
-        Job job1 = mapper.jobToEntity(jobData1);
-        Job job2 = mapper.jobToEntity(jobData2);
-        Job job3 = mapper.jobToEntity(jobData3);
+        //Job#1
+        Job jobExpected1 = new Job(
+                (long) 1,
+                "SomeName.class",
+                "Some simple job#1",
+                "* * * * *",
+                new HashMap<String,String>(),
+                false);
 
-        Assert.assertEquals(job1.getClassName(),jobData1.getClazz());
-        Assert.assertEquals(job1.getName(),jobData1.getName());
-        Assert.assertEquals(job1.getConfig(),jobData1.getConfig());
-        Assert.assertEquals(job1.getId(), jobData1.getId());
-        Assert.assertEquals(job1.getActive(), jobData1.getActive());
-        Assert.assertEquals(job1.getSchedule(), jobData1.getSchedule());
+        //Job#2
+        jobConfig2 = new HashMap<>();
+        jobConfig2.put("key1","value1");
+        jobConfig2.put("key2","value2");
+        jobConfig2.put("key3","value3");
 
-        Assert.assertEquals(job2.getClassName(),jobData2.getClazz());
-        Assert.assertEquals(job2.getName(),jobData2.getName());
-        Assert.assertEquals(job2.getConfig(),jobData2.getConfig());
-        Assert.assertEquals(job2.getId(), jobData2.getId());
-        Assert.assertEquals(job2.getActive(), jobData2.getActive());
-        Assert.assertEquals(job2.getSchedule(), jobData2.getSchedule());
+        Job jobExpected2 = new Job();
+        jobExpected2.setId((long) 2);
+        jobExpected2.setName("Some simple job#2");
+        jobExpected2.setClassName("Blah.class");
+        jobExpected2.setSchedule("2 3 * * *");
+        jobExpected2.setActive(true);
+        jobExpected2.setConfig(jobConfig2);
 
-        Assert.assertEquals(job3.getClassName(),jobData3.getClazz());
-        Assert.assertEquals(job3.getName(),jobData3.getName());
-        Assert.assertEquals(job3.getConfig(),jobData3.getConfig());
-        Assert.assertEquals(job3.getId(), jobData3.getId());
-        Assert.assertEquals(job3.getActive(), jobData3.getActive());
-        Assert.assertEquals(job3.getSchedule(), jobData3.getSchedule());
+        //Job#3
+        jobConfig3 = new HashMap<>();
+        jobConfig3.put("key1","value1");
+        jobConfig3.put("key2","value2");
+        jobConfig3.put("key3","value3");
+
+        Job jobExpected3 = new Job();
+        jobExpected3.setConfig(jobConfig3);
+
+        //Mapping
+        Job jobActual1 = JobMapperImpl.jobToEntity(jobData1);
+        Job jobActual2 = JobMapperImpl.jobToEntity(jobData2);
+        Job jobActual3 = JobMapperImpl.jobToEntity(jobData3);
+
+        //Assertion
+        Assert.assertEquals(jobExpected1, jobActual1);
+        Assert.assertEquals(jobExpected2, jobActual2);
+        Assert.assertEquals(jobExpected3, jobActual3);
+
     }
 
     @Test
     public void testEntityToJob() throws Exception {
 
-        Job job11 = new Job(
+        //Job#1
+        Job job1 = new Job(
                 (long) 10,
                 "SomeName.class",
                 "Some simple job#10",
@@ -96,27 +126,33 @@ public class JobMapperImplTest {
                 false
         );
 
-        Job job12 = new Job();
-        job12.setId((long) 11);
-        job12.setName("Some simple job#11");
-        job12.setActive(true);
+        //Job#2
+        Job job2 = new Job();
+        job2.setId((long) 11);
+        job2.setName("Some simple job#11");
+        job2.setActive(true);
 
-        JobData jobData11 = mapper.entityToJob(job11);
-        JobData jobData12 = mapper.entityToJob(job12);
+        //jobDataExpected#1
+        JobData jobDataExpected1 = new JobDataImpl(
+                (long) 10,
+                "SomeName.class",
+                "Some simple job#10",
+                new HashMap<String, String>(),
+                "* * * * *",
+                false
+                );
 
-        Assert.assertEquals(job11.getClassName(),jobData11.getClazz());
-        Assert.assertEquals(job11.getName(),jobData11.getName());
-        Assert.assertEquals(job11.getConfig(),jobData11.getConfig());
-        Assert.assertEquals(job11.getId(), jobData11.getId());
-        Assert.assertEquals(job11.getActive(), jobData11.getActive());
-        Assert.assertEquals(job11.getSchedule(), jobData11.getSchedule());
+        //jobDataExpected#2
+        JobData jobDataExpected2 = new JobDataImpl();
+        ((JobDataImpl)jobDataExpected2).setId((long) 11);
+        jobDataExpected2.setName("Some simple job#11");
+        jobDataExpected2.setActive(true);
 
-        Assert.assertEquals(job12.getClassName(),jobData12.getClazz());
-        Assert.assertEquals(job12.getName(),jobData12.getName());
-        Assert.assertEquals(job12.getConfig(),jobData12.getConfig());
-        Assert.assertEquals(job12.getId(), jobData12.getId());
-        Assert.assertEquals(job12.getActive(), jobData12.getActive());
-        Assert.assertEquals(job12.getSchedule(), jobData12.getSchedule());
+        //Mapping
+        JobData jobDataActual1 = JobMapperImpl.entityToJob(job1);
+        JobData jobDataActual2 = JobMapperImpl.entityToJob(job2);
 
+        Assert.assertEquals(jobDataExpected1,jobDataActual1);
+        Assert.assertEquals(jobDataExpected2,jobDataActual2);
     }
 }
