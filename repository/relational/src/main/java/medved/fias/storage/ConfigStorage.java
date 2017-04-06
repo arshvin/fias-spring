@@ -1,7 +1,10 @@
 package medved.fias.storage;
 
+import com.google.common.collect.FluentIterable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -13,17 +16,16 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Hello world!
  *
  */
-//TODO: Recognize what kind of the details should be here, but some of them will be taken away to core module
 @Configuration
 @ComponentScan
 @EnableJpaRepositories
-@PropertySource("classpath:storage.properties")
+@PropertySource(value = "classpath:storage.properties", ignoreResourceNotFound = true)
 public class ConfigStorage
 {
     @Autowired
@@ -74,18 +76,29 @@ public class ConfigStorage
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSourceEmbedded, JpaVendorAdapter jpaVendorAdapter){
+    @Profile({"develop", "prod"})
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, JpaVendorAdapter jpaVendorAdapter){
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-        emf.setDataSource(dataSourceEmbedded);
+        emf.setDataSource(dataSource);
         emf.setJpaVendorAdapter(jpaVendorAdapter);
         emf.setPackagesToScan("medved.fias.storage.domain");
         Properties jpaProperties = new Properties();
-        jpaProperties.put("hibernate.hbm2ddl.auto",environment.getProperty("hibernate.hbm2ddl.auto"));
+
+        ApplicationContext applicationContext = new GenericApplicationContext();
+        Environment env = applicationContext.getEnvironment();
+        List activeProfiles = Arrays.asList(env.getActiveProfiles());
+        if (activeProfiles.contains("develop")){
+            jpaProperties.put("hibernate.hbm2ddl.auto","create");
+        } else {
+            jpaProperties.put("hibernate.hbm2ddl.auto",environment.getProperty("hibernate.hbm2ddl.auto"));
+        }
+
         emf.setJpaProperties(jpaProperties);
         return emf;
     }
 
     @Bean
+    @Profile({"develop", "prod"})
     public JpaTransactionManager transactionManager(EntityManagerFactory localContainerEntityManagerFactoryBean){
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(localContainerEntityManagerFactoryBean);

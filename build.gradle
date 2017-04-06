@@ -45,6 +45,7 @@ allprojects {
         compile "org.springframework.data:spring-data-commons:1.12.1.RELEASE"
         compile "org.springframework:spring-context:$springVersion"
         testCompile "org.springframework:spring-test:$springVersion"
+        testCompile "junit:junit:4.12"
         //testCompile group: 'org.testng', name: 'testng', version: '6.9.10'
 
     }
@@ -64,7 +65,7 @@ dependencies{
     compile project(":core")
     compile project(":common")
     compile project(":repository:relational")
-    //compile project(":admin")
+    compile project(":admin")
 
     def tomcatVersion = '7.0.59'
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",

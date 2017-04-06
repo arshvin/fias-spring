@@ -7,7 +7,7 @@ import medved.fias.scheduling.JobStorage;
 import medved.fias.storage.domain.Job;
 import medved.fias.storage.mappers.exceptions.EntityToJobMapperException;
 import medved.fias.storage.mappers.exceptions.JobToEntityMapperException;
-import medved.fias.storage.mappers.job.JobMapper;
+import medved.fias.storage.mappers.job.JobMapperImpl;
 import medved.fias.storage.repositories.JobsJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -18,21 +18,25 @@ import java.util.List;
 /**
  * Created by arshvin on 05.08.16.
  */
-//@Component
+@Component
 public class JobStorageImpl implements JobStorage {
     @Autowired
     JobsJpaRepository repository;
-    @Autowired
-    JobMapper jobMapper;
+
+    JobMapperImpl jobMapper;
 
     @Override
-    public void saveJob(JobData jobData) {
+    public JobData saveJob(JobData jobData) {
         try {
             Job job = jobMapper.jobToEntity(jobData);
-            repository.save(job);
+            job = repository.save(job);
+            return jobMapper.entityToJob(job);
         } catch (JobToEntityMapperException e) {
             e.printStackTrace();
+        } catch (EntityToJobMapperException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     @Override
@@ -43,6 +47,11 @@ public class JobStorageImpl implements JobStorage {
         } catch (JobToEntityMapperException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void removeAll() {
+        repository.deleteAll();
     }
 
     @Override
@@ -58,27 +67,25 @@ public class JobStorageImpl implements JobStorage {
     }
 
     @Override
-    public List<JobData> getBy(Class clazz) {
-//        List<JobData> result = FluentIterable.from(repository.findByClazz(clazz)).transform(new Function<Job, JobData>() {
-//            @Override
-//            public JobData apply(Job input) {
-//                JobData jobData = null;
-//                try {
-//                    jobData = jobMapper.entityToJob(input);
-//                } catch (EntityToJobMapperException e) {
-//                    e.printStackTrace();
-//                }
-//                return jobData;
-//            }
-//        }).toList();
-            List result = null;
+    public List<JobData> getBy(String className) {
+        List<JobData> result = FluentIterable.from(repository.findByClassName(className)).transform(new Function<Job, JobData>() {
+            @Override
+            public JobData apply(Job input) {
+                JobData jobData = null;
+                try {
+                    jobData = jobMapper.entityToJob(input);
+                } catch (EntityToJobMapperException e) {
+                    e.printStackTrace();
+                }
+                return jobData;
+            }
+        }).toList();
         return result;
     }
 
-    //TODO:Implement the pageable functionality
     @Override
     public List<JobData> getAll(Pageable pageable) {
-        return FluentIterable.from(repository.findAll()).transform(new Function<Job, JobData>() {
+        return FluentIterable.from(repository.findAll(pageable)).transform(new Function<Job, JobData>() {
             @Override
             public JobData apply(Job input) {
                 JobData jobData = null;

@@ -1,6 +1,7 @@
 package medved.fias.storage.domain;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -10,6 +11,7 @@ import java.util.Map;
 public class Job{
 
     @Id
+    @GeneratedValue
     private Long id;
 
     @Column(name = "INSTANCE_OF", nullable = false)
@@ -21,11 +23,18 @@ public class Job{
     @Column(name = "SCHEDULE", nullable = false)
     private String schedule;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "JOB_CONFIG")
     @MapKeyColumn(name = "KEY")
     @Column(name = "VALUE")
     private Map<String,String> config;
+
+    @PrePersist
+    private  void InitPropeties(){
+        if (config == null){
+            config = new HashMap<>();
+        }
+    }
 
     @Column(name = "ACTIVE")
     private Boolean active;

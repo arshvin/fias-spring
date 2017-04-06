@@ -7,6 +7,7 @@ package medved.fias.storage.repositories;
 
 import medved.fias.storage.domain.AddrObj;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,7 @@ import java.util.UUID;
  */
 @Repository
 @Transactional
-public interface AddrObjJpaRepository extends CrudRepository<AddrObj,UUID> {
+public interface AddrObjJpaRepository extends PagingAndSortingRepository<AddrObj,UUID> {
 
     AddrObj findByAoGuid(UUID aoGuid);
     AddrObj findByAoId(UUID aoId);

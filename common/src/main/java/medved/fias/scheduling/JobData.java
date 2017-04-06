@@ -8,7 +8,7 @@ import java.util.Map;
 public interface JobData {
     Long getId();
     void setClassName(String className);
-    String getClazz();
+    String getClassName();
     void setName(String name);
     String getName();
     void setConfig(Map<String,String> config);

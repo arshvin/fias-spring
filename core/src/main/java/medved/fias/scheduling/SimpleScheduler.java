@@ -2,7 +2,6 @@ package medved.fias.scheduling;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
-import medved.fias.AppConfig;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +30,6 @@ public class SimpleScheduler implements Scheduler {
     @Autowired
     private JobStorage jobStorage;
 
-    @Autowired
-    //Environments for connection to storage???
-    private AppConfig appConf;
-
     private SchedulerFactory schedulerFactory = new StdSchedulerFactory();
     private org.quartz.Scheduler scheduler;
 
@@ -46,9 +41,10 @@ public class SimpleScheduler implements Scheduler {
         }
     }
 
-    private void pushJobToScheduler(JobData jobData) throws SchedulerException {
+    private void pushJobToScheduler(JobData jobData) throws SchedulerException, ClassNotFoundException {
+        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         JobDataMap jobDataMap = new JobDataMap(jobData.getConfig());
-        JobDetail job = newJob(jobData.getClazz())
+        JobDetail job = newJob((Class<? extends Job>) classLoader.loadClass(jobData.getClassName()))
                 .withIdentity(jobData.getName())
                 .usingJobData(jobDataMap)
                 .storeDurably()
@@ -75,20 +71,25 @@ public class SimpleScheduler implements Scheduler {
     @Override
     public void initialize() {
 
-        Pageable bigPage = new PageRequest(1, jobStorage.getCount().intValue());
-        FluentIterable.from(jobStorage.getAll(bigPage)).transform(new Function<JobData, String>() {
-            @Override
-            public String apply(JobData input) {
+        int jobCount = jobStorage.getCount().intValue();
+        if (jobCount > 0){
+            Pageable bigPage = new PageRequest(0, jobCount );
+            FluentIterable.from(jobStorage.getAll(bigPage)).transform(new Function<JobData, String>() {
+                @Override
+                public String apply(JobData input) {
 
-                try {
-                    pushJobToScheduler(input);
-                } catch (SchedulerException e) {
-                    e.printStackTrace();
-                }
+                    try {
+                        pushJobToScheduler(input);
+                    } catch (SchedulerException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
 
-                return null;
-            }
-        });
+                    return null;
+                    }
+            });
+        }
 
         try {
             scheduler.start();

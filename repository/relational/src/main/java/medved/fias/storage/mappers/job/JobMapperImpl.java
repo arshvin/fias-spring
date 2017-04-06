@@ -13,7 +13,7 @@ public class JobMapperImpl  {
 
         Job job = new Job();
         job.setId(jobData.getId());
-        job.setClassName(jobData.getClazz());
+        job.setClassName(jobData.getClassName());
         job.setName(jobData.getName());
         job.setConfig(jobData.getConfig());
         job.setSchedule(jobData.getSchedule());

@@ -8,6 +8,7 @@ package medved.fias.storage.repositories;
 import medved.fias.storage.domain.AddrObj;
 import medved.fias.storage.domain.House;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +21,7 @@ import java.util.UUID;
  */
 @Repository
 @Transactional
-public interface HouseJpaRepository extends CrudRepository<House, UUID> {
+public interface HouseJpaRepository extends PagingAndSortingRepository<House, UUID> {
 
     House findByHouseNum(String houseNum);
     House findByPostalCode(String postalCode);

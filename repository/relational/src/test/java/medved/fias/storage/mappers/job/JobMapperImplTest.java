@@ -1,22 +1,12 @@
 package medved.fias.storage.mappers.job;
 
 import medved.fias.scheduling.JobData;
-import medved.fias.storage.ConfigStorage;
 import medved.fias.storage.domain.Job;
-import medved.fias.storage.repositories.JobsJpaRepository;
 import org.junit.Assert;
 import org.junit.Ignore;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 
 import java.util.HashMap;
 
@@ -24,8 +14,8 @@ import java.util.HashMap;
  * Created by arshvin on 26.01.17.
  */
 
-/**We don't care about absence of container context. It's needed
- *  testing the component by itself.
+/**We don't care about absence of container context. We will try to test
+ *  the component by itself.
  */
 public class JobMapperImplTest {
 

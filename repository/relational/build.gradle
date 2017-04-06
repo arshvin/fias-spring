@@ -20,8 +20,7 @@ dependencies{
     compile "javax.transaction:jta:1.1"
 
     compile "com.google.guava:guava:19.0"
-
-    testCompile "junit:junit:4.12"
+    
     testCompile "com.h2database:h2:1.4.193"
 
     runtime "com.h2database:h2:1.4.193"

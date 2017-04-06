@@ -1,12 +1,11 @@
 package medved.fias.content.valiadators;
 
 
-import org.testng.annotations.Test;
+import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
 
-import static org.testng.Assert.*;
 
 /**
  * Created by arshvin on 15.10.15.
