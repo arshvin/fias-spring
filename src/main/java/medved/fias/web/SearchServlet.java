@@ -4,7 +4,6 @@ import medved.fias.content.DataStorage;
 import medved.fias.content.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +25,6 @@ public class SearchServlet {
 
     @RequestMapping(value = "uuid/{id}", method = RequestMethod.GET)
     Data requestByUuid(@PathVariable("id") UUID uuid){
-        return dataStorage.getObjectsBy(uuid);
+        return dataStorage.getObjectBy(uuid);
     }
 }

@@ -13,8 +13,9 @@ import java.util.UUID;
 public interface DataStorage {
     void putAddrObj(AddressObjects.Object addressObject);
     void putHouse(Houses.House house);
-    Data getObjectsBy(UUID uuid);
+    Data getObjectBy(UUID uuid);
     List<Data> getObjectsBy(String content, Pageable pageable);
+    List<Data> getChildrenOf(UUID uuid, Pageable pageable);
     List<Data> getAddrObjAll(Pageable pageable);
     List<Data> getHousesAll(Pageable pageable);
     Long getAddrObjCount();

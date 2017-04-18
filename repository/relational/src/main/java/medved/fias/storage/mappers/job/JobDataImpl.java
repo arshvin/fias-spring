@@ -4,11 +4,13 @@ import medved.fias.scheduling.JobData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Map;
 
 /**
  * Created by arshvin on 21.08.16.
  */
+@XmlRootElement
 public class JobDataImpl implements JobData {
 
     private static Logger logger = LoggerFactory.getLogger("JobDataImpl");

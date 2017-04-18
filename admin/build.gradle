@@ -5,9 +5,10 @@ buildscript {
     }
 
 }
-
 apply plugin: 'idea'
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.13'
+dependencies{
+    compile "org.springframework:spring-webmvc:$springVersion"
+    complie project (":common")
+    compile "com.fasterxml.jackson.core:jackson-databind:2.6.5"
 }

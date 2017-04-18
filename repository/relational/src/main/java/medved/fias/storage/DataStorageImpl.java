@@ -73,7 +73,7 @@ public class DataStorageImpl implements DataStorage {
     }
 
     @Override
-    public Data getObjectsBy(UUID uuid) {
+    public Data getObjectBy(UUID uuid) {
         AddrObj addrObj = addrObjRepository.findByAoGuid(uuid);
         if (addrObj == null) {
             House house = houseRepository.findByHouseGuid(uuid);
@@ -132,8 +132,12 @@ public class DataStorageImpl implements DataStorage {
 
     }
 
-    //FIXME: Here we'll probably occur with large memory overhead due to returning big list
-    //TODO: Implement the pageable functionality
+    //TODO: Implement me
+    @Override
+    public List<Data> getChildrenOf(UUID uuid, Pageable pageable) {
+        return null;
+    }
+
     @Override
     public List<Data> getAddrObjAll(Pageable pageable) {
         return FluentIterable.from(addrObjRepository.findAll()).transform(new Function<AddrObj, Data>() {
@@ -149,8 +153,6 @@ public class DataStorageImpl implements DataStorage {
         }).toList();
     }
 
-    //FIXME: Here we'll probably occur with large memory overhead due to returning big list
-    //TODO: Implement the pageable functionality
     @Override
     public List<Data> getHousesAll(Pageable pageable) {
         return FluentIterable.from(houseRepository.findAll()).transform(new Function<House, Data>() {
